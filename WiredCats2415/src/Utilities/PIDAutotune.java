@@ -13,6 +13,9 @@ package Utilities;
  */
 public class PIDAutotune {
     
+    
+    boolean prop_tuned = false;
+    
     /**
      * Called repeatedly in order to update and tune the PID
      * @param value - Current value of the PID
