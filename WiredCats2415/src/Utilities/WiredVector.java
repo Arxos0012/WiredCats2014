@@ -6,25 +6,18 @@
 package Utilities;
 
 import com.sun.squawk.io.BufferedWriter;
-import com.sun.squawk.util.SimpleLinkedList;
+import java.util.Vector;
 
 /**
  *
  * @author jackwinski
  */
-public class BoticsBlackbox {
+public class WiredVector {
 
-    private SimpleLinkedList valueList;
+    private Vector valueList;
 
-    public BoticsBlackbox() {
-        valueList = new SimpleLinkedList();
-    }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
+    public WiredVector() {
+        valueList = new Vector();
     }
     
     /**
@@ -32,7 +25,27 @@ public class BoticsBlackbox {
      * @param input Value to be added
      */
     public void addVal(int input) {
-        valueList.
+        valueList.addElement(new OurInteger(input));
+    }
+    
+    public int getVal(int index){
+        return((OurInteger)valueList.elementAt(index)).i;
+    }
+    
+    public int lastElement(){
+        return ((OurInteger)valueList.lastElement()).i;
+    }
+    
+    public int size(){
+        return valueList.size();
+    }
+    
+    private class OurInteger {
+        public int i;
+        
+        public OurInteger(int i){
+            this.i = i;
+        }
     }
 
 //    /**
