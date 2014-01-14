@@ -47,35 +47,35 @@ public class PIDAutotune {
     private void analyze(){
         WiredVector maxima = findLocalMaximaIndices();
         WiredVector minima = findLocalMinimaIndices();
-        int tuneMax;
-        int tuneMaxPos;
-        int tuneMin;
-        int tuneMinPos;
+//        int tuneMax;
+//        int tuneMaxPos;
+//        int tuneMin;
+//        int tuneMinPos;
         
-        maxCount = 0
-        minCount = 0
-        for(int i = 1; i < maxima.size(); i++) {
-          if(maxima.getVal(i) == maxima.getVal(i-1)) {
-            maxCount++;
-          }
-          else {
-            maxCount = 0;
-          }
-          if(minima.getVal(i) == minima.getVal(i-1)) {
-            minCount++;
-          }
-          else {
-            minCount = 0;
-          }
-          if(maxCount > 4 && minCount > 4) {
-              tuneMax = maxima.getVal(i-4);
-              tuneMaxPos = maxima.getVal(i-4);
-              tuneMin = minima.getVal(i-4);
-              tuneMinPos = minima.getVal(i-4);
-              tuneMid = (tuneMax + tuneMin)/2
-              break;
-          }
-        }
+//        maxCount = 0
+//        minCount = 0
+//        for(int i = 1; i < maxima.size(); i++) {
+//          if(maxima.getVal(i) == maxima.getVal(i-1)) {
+//            maxCount++;
+//          }
+//          else {
+//            maxCount = 0;
+//          }
+//          if(minima.getVal(i) == minima.getVal(i-1)) {
+//            minCount++;
+//          }
+//          else {
+//            minCount = 0;
+//          }
+//          if(maxCount > 4 && minCount > 4) {
+//              tuneMax = maxima.getVal(i-4);
+//              tuneMaxPos = maxima.getVal(i-4);
+//              tuneMin = minima.getVal(i-4);
+//              tuneMinPos = minima.getVal(i-4);
+//              tuneMid = (tuneMax + tuneMin)/2
+//              break;
+//          }
+//        }
     }
     
     
