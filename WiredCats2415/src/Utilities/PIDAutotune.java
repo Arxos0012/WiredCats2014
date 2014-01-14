@@ -47,8 +47,6 @@ public class PIDAutotune {
     private void analyze(){
         WiredVector maxima = findLocalMaximaIndices();
         WiredVector minima = findLocalMinimaIndices();
-        
-        
 //        int tuneMax;
 //        int tuneMaxPos;
 //        int tuneMin;
