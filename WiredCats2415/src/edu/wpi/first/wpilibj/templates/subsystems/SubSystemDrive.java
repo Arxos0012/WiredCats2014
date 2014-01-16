@@ -2,6 +2,7 @@
 package edu.wpi.first.wpilibj.templates.subsystems;
 
 import edu.wpi.first.wpilibj.Gyro;
+import edu.wpi.first.wpilibj.Accelerometer;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.templates.RobotMap;
@@ -17,7 +18,7 @@ public class SubSystemDrive extends Subsystem {
     Talon left = new Talon(RobotMap.LEFT_DRIVE);
     Talon right = new Talon(RobotMap.RIGHT_DRIVE);
     Gyro gyro = new Gyro(RobotMap.GYRO);
-    
+    Accelerometer accel = new Accelerometer(RobotMap.ACCELEREOMETER);
 
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
