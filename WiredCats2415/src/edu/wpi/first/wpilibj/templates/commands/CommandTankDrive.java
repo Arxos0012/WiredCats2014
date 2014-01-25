@@ -29,7 +29,7 @@ public class CommandTankDrive extends CommandBase {
         float actualRightJS = (float)jsdriver.rightY();
         
         float actualLeftMotor = (float)actualMotor(theorMotor(theorJS(actualLeftJS))); 
-        float actualRightMotor = (float)-actualMotor(theorMotor(theorJS(actualRightJS))); 
+        float actualRightMotor = (float)actualMotor(theorMotor(theorJS(actualRightJS))); 
         
         drivesubsystem.setLeft(actualLeftMotor);
         drivesubsystem.setRight(actualRightMotor);

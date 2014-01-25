@@ -3,14 +3,17 @@
  * and open the template in the editor.
  */
 package edu.wpi.first.wpilibj.templates.commands;
-
+import java.lang.Math;
 /**
  *
  * @author benbarber
  */
 public class CommandArcadeDrive extends CommandBase{
     
-    double xDB = 0, yDB = 0;
+    public static float PRIMARY_TURN_COEFFICIENT = 0.8f;
+    public static float SECONDARY_TURN_COEFFICIENT = 1.0f;
+    
+    double DEADBAND = 0.06;
     
     public CommandArcadeDrive() {
         // Use requires() here to declare subsystem dependencies
@@ -25,15 +28,22 @@ public class CommandArcadeDrive extends CommandBase{
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
         
-        double x = jsdriver.getX();
-        double y = jsdriver.getY();
+        double y = jsdriver.leftY();
+        double x = jsdriver.rightX();
         
-        if(x <= -xDB && x >= xDB) x = 0;
-        if(y <= -yDB && y >= yDB) y = 0;
+        if(x <= -DEADBAND && x >= DEADBAND) x = 0;
+        if(y <= -DEADBAND && y >= DEADBAND) y = 0;
         
-        double left = y + x;
-        double right = y - x;
+        double left;
+        double right;
         
+        if(Math.abs(y) <= DEADBAND){
+            left = y - SECONDARY_TURN_COEFFICIENT*x;
+            right = y + SECONDARY_TURN_COEFFICIENT*x;
+        }else{
+            left = y - PRIMARY_TURN_COEFFICIENT*x;
+            right = y + PRIMARY_TURN_COEFFICIENT*x;
+        }
         
         drivesubsystem.setLeft(left);
         drivesubsystem.setRight(right);

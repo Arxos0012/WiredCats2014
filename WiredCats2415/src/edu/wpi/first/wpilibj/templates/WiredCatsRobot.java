@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj.templates.commands.CommandBase;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
-public class RobotTemplate extends IterativeRobot {
+public class WiredCatsRobot extends IterativeRobot {
 
     Command autonomousCommand;
 
@@ -32,7 +32,6 @@ public class RobotTemplate extends IterativeRobot {
     public void robotInit() {
         // instantiate the command used for the autonomous period
 //        autonomousCommand = new  whatever our command will be
-
         // Initialize all subsystems
         CommandBase.init();
     }
@@ -54,7 +53,7 @@ public class RobotTemplate extends IterativeRobot {
         // teleop starts running. If you want the autonomous to 
         // continue until interrupted by another command, remove
         // this line or comment it out.
-        autonomousCommand.cancel();
+        //autonomousCommand.cancel();
     }
 
     /**
