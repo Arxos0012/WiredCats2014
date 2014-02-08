@@ -3,6 +3,7 @@
  * and open the template in the editor.
  */
 package edu.wpi.first.wpilibj.templates.commands;
+import Utilities.WiredVector;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import java.lang.Math;
 /**
@@ -11,19 +12,29 @@ import java.lang.Math;
  */
 public class CommandArcadeDrive extends CommandBase{
     
-    public static float PRIMARY_TURN_COEFFICIENT = 0.8f;
-    public static float SECONDARY_TURN_COEFFICIENT = 1.0f;
+    private float primaryTurnCoefficient = 0.8f;
+    private float SECONDARY_TURN_COEFFICIENT = 1.0f; 
+    private float jsDeadband = 0.06f;
+    private float interpolationBias = 0.7f;
+    private float LOW_SPEED_MAX = 12; //ft/s
     
-    double DEADBAND = 0.06;
+    private float UPPER_SHIFT_LIMIT = .8f * LOW_SPEED_MAX;
+    private float LOWER_SHIFT_LIMIT = 4; 
+    
+    private WiredVector speeds;
     
     public CommandArcadeDrive() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
         requires(drivesubsystem);
+        speeds = new WiredVector();
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
+        primaryTurnCoefficient = (float)resources.getValue("primaryTurnCoefficient");
+        jsDeadband = (float)resources.getValue("jsDeadband");
+        interpolationBias = (float)resources.getValue("interpolationBias");
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -32,22 +43,50 @@ public class CommandArcadeDrive extends CommandBase{
         double y = jsdriver.leftY();
         double x = jsdriver.rightX();
         
-        if(x <= -DEADBAND && x >= DEADBAND) x = 0;
-        if(y <= -DEADBAND && y >= DEADBAND) y = 0;
+        System.out.println(drivesubsystem.getSpeed());
+        
+        if(Math.abs(x) < jsDeadband) x = 0;
+        if(Math.abs(y) < jsDeadband) y = 0;
+        
+        y = interpolationBias*y + (1-interpolationBias)*y*y*y;
         
         double left;
         double right;
         
-        if(Math.abs(y) <= DEADBAND){
-            left = y - SECONDARY_TURN_COEFFICIENT*x;
-            right = y + SECONDARY_TURN_COEFFICIENT*x;
+        if(Math.abs(y) <= jsDeadband){
+            left = y + SECONDARY_TURN_COEFFICIENT*x;
+            right = y - SECONDARY_TURN_COEFFICIENT*x;
         }else{
-            left = y - PRIMARY_TURN_COEFFICIENT*x;
-            right = y + PRIMARY_TURN_COEFFICIENT*x;
+            left = y + primaryTurnCoefficient*x;
+            right = y - primaryTurnCoefficient*x;
         }
+        
+        //shifting code.
+        float avgSpd = getAverageSpeed();
+        if (avgSpd > UPPER_SHIFT_LIMIT && !drivesubsystem.isHighSpeed()){
+            drivesubsystem.setHighSpeed();
+        } else if (avgSpd < LOWER_SHIFT_LIMIT && drivesubsystem.isHighSpeed()){
+            drivesubsystem.setLowSpeed();
+        }
+            
+        //System.out.println("[WiredCats] Gyroscope: " + drivesubsystem.getAngle());
         
         drivesubsystem.setLeft(left);
         drivesubsystem.setRight(right);
+    }
+    
+    /**
+     * Returns the average current speed of the drivetrain in feet/second.
+    */
+    public float getAverageSpeed(){
+        //TODO
+        float sum = 0;
+        speeds.addVal(drivesubsystem.getSpeed());
+        for (int i = 0; i < speeds.size(); i++){
+            sum+= speeds.getVal(i);
+        }
+        if (speeds.size() > 10) speeds.removeFirst();
+        return sum / speeds.size();
     }
 
     // Make this return true when this Command no longer needs to run execute()

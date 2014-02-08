@@ -157,6 +157,14 @@ public class ChezyGyro extends SensorBase implements PIDSource, ISensor, LiveWin
       return scaledValue;
     }
   }
+  /**
+   * Returns the angular velocity of the robot.
+   * @author Sam Crane
+   * @return 
+   */
+  public double getAngularVelocity(){
+      return m_analog.getAverageValue();
+  }
 
   /**
     * Set the gyro type based on the sensitivity.

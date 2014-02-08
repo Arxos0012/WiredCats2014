@@ -18,10 +18,10 @@ import edu.wpi.first.wpilibj.templates.commands.CommandTankDrive;
 public class SubSystemDrive extends Subsystem {
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
-    public static final int TICKS_PER_ROTATION = 240;
+    public static final int TICKS_PER_REVOLUTION = 120;
     
     public static final float WHEEL_CIRCUMFERENCE_FEET = (float)((2*2*Math.PI)/12);
-    public static final float TICKS_TO_FEET = WHEEL_CIRCUMFERENCE_FEET / TICKS_PER_ROTATION;
+    public static final float TICKS_TO_FEET_PER_SECOND = WHEEL_CIRCUMFERENCE_FEET / TICKS_PER_REVOLUTION;
     
     
     Talon left = new Talon(RobotMap.DRIVE_LEFT_MOTOR_1);
@@ -29,7 +29,7 @@ public class SubSystemDrive extends Subsystem {
     Talon right = new Talon(RobotMap.DRIVE_RIGHT_MOTOR_1);
     Talon right2 = new Talon(RobotMap.DRIVE_RIGHT_MOTOR_2);
     ChezyGyro gyro = new ChezyGyro(RobotMap.DRIVE_GYRO);
-    Accelerometer accel = new Accelerometer(RobotMap.DRIVE_ACCEL);
+    //Accelerometer accel = new Accelerometer(RobotMap.DRIVE_ACCEL);
     Encoder leftEncoder = new Encoder(RobotMap.DRIVE_LEFT_ENCODER_A,
                                       RobotMap.DRIVE_LEFT_ENCODER_B);
     Encoder rightEncoder = new Encoder(RobotMap.DRIVE_RIGHT_ENCODER_A,
@@ -40,6 +40,8 @@ public class SubSystemDrive extends Subsystem {
 
     public void init(){
         gyro.initGyro();
+        leftEncoder.start();
+        rightEncoder.start();
     }
     
     public void initDefaultCommand() {
@@ -49,12 +51,12 @@ public class SubSystemDrive extends Subsystem {
     
     
     public void setLeft(double power){
-        this.left.set(power);
+        left.set(power);
         left2.set(power);
     }
     
     public void setRight(double power){
-        this.right.set(-power);
+        right.set(-power);
         right2.set(-power);
     }
     
@@ -68,9 +70,10 @@ public class SubSystemDrive extends Subsystem {
      * @return 
      */
     public float getSpeed(){
-        float ticks = (float)(leftEncoder.getRate() + rightEncoder.getRate());
+//        System.out.println(leftEncoder.getRate() + ", " + rightEncoder.getRate());
+        float ticks = (float)(leftEncoder.getRate() + -rightEncoder.getRate());
         ticks /= 2;
-        return TICKS_TO_FEET * ticks;
+        return TICKS_TO_FEET_PER_SECOND * ticks;
     }
     
     public void setLowSpeed(){
@@ -78,7 +81,7 @@ public class SubSystemDrive extends Subsystem {
         highSpeedSolenoid.set(false);
     }
     
-    public float getGyroAngle(){
+    public float getAngle(){
         return (float)gyro.getAngle();
     }
     

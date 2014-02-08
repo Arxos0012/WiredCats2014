@@ -24,16 +24,20 @@ public class WiredVector {
      * This function adds a value to the Blackbox's list of values
      * @param input Value to be added
      */
-    public void addVal(int input) {
+    public void addVal(float input) {
         valueList.addElement(new OurInteger(input));
     }
     
-    public int getVal(int index){
+    public float getVal(int index){
         return((OurInteger)valueList.elementAt(index)).i;
     }
     
-    public int lastElement(){
+    public float lastElement(){
         return ((OurInteger)valueList.lastElement()).i;
+    }
+    
+    public void removeFirst(){
+        if (valueList.elementAt(0) != null) valueList.removeElementAt(0);
     }
     
     public int size(){
@@ -41,9 +45,9 @@ public class WiredVector {
     }
     
     private class OurInteger {
-        public int i;
+        public float i;
         
-        public OurInteger(int i){
+        public OurInteger(float i){
             this.i = i;
         }
     }

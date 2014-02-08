@@ -14,24 +14,19 @@ public class RobotMap {
     
     public static final int DRIVER = 1;
     
+    //PWM
     public static final int DRIVE_LEFT_MOTOR_1 = 1;
-    public static final int DRIVE_LEFT_MOTOR_2 = 4;
-    public static final int DRIVE_RIGHT_MOTOR_1 = 2;
-    public static final int DRIVE_RIGHT_MOTOR_2 = 3;
+    public static final int DRIVE_LEFT_MOTOR_2 = 2;
+    public static final int DRIVE_RIGHT_MOTOR_1 = 3;
+    public static final int DRIVE_RIGHT_MOTOR_2 = 4;
+    //analog
     public static final int DRIVE_GYRO = 1;
-    public static final int DRIVE_ACCEL = 10;
+//    public static final int DRIVE_ACCEL = 10;
     public static final int DRIVE_LOW_SPEED_SOLENOID = 1;
     public static final int DRIVE_HIGH_SPEED_SOLENOID = 2;
-    
-    public static final int ARM_MOTOR = 9;
-    public static final int DRIVE_LEFT_ENCODER_A = 6;
-    public static final int DRIVE_LEFT_ENCODER_B = 7;
-    public static final int DRIVE_RIGHT_ENCODER_A = 8;
-    public static final int DRIVE_RIGHT_ENCODER_B = 9;
-
-    
-    // If you are using multiple modules, make sure to define both the port
-    // number and the module. For example you with a rangefinder:
-    // public static final int rangefinderPort = 1;
-    // public static final int rangefinderModule = 1;
+    //digital
+    public static final int DRIVE_LEFT_ENCODER_A = 1;
+    public static final int DRIVE_LEFT_ENCODER_B = 2;
+    public static final int DRIVE_RIGHT_ENCODER_A = 3;
+    public static final int DRIVE_RIGHT_ENCODER_B = 4;
 }
