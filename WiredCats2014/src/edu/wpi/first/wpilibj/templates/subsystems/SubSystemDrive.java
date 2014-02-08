@@ -86,28 +86,9 @@ public class SubSystemDrive extends Subsystem {
 //        return (float)gyro.
 //    }
 //    
-    public void setHighSpeed(){
-        lowSpeedSolenoid.set(false);
-        highSpeedSolenoid.set(true);
-    }
-    
-    public void setLowSpeed(){
-        lowSpeedSolenoid.set(true);
-        highSpeedSolenoid.set(false);
-    }
-    
+
     public boolean isHighSpeed(){
         return highSpeedSolenoid.get();
-    }
-    
-    /**
-     * Returns the robots speed in ft/s.
-     * @return 
-     */
-    public float getSpeed(){
-        float ticks = (float)(leftEncoder.getRate() + rightEncoder.getRate());
-        ticks /= 2;
-        return TICKS_TO_FEET * ticks;
     }
     
     public void resetGyro(){

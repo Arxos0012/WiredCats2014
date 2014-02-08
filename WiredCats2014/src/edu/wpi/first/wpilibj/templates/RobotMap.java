@@ -14,14 +14,20 @@ public class RobotMap {
     
     public static final int DRIVER = 1;
     
-    public static final int DRIVE_LEFT = 2;
-    public static final int DRIVE_RIGHT = 1;
-    public static final int DRIVE_GYRO = 2;
+    public static final int DRIVE_LEFT_MOTOR_1 = 1;
+    public static final int DRIVE_LEFT_MOTOR_2 = 4;
+    public static final int DRIVE_RIGHT_MOTOR_1 = 2;
+    public static final int DRIVE_RIGHT_MOTOR_2 = 3;
+    public static final int DRIVE_GYRO = 1;
     public static final int DRIVE_ACCEL = 10;
+    public static final int DRIVE_LOW_SPEED_SOLENOID = 1;
+    public static final int DRIVE_HIGH_SPEED_SOLENOID = 2;
     
-    public static final int ARM_MOTOR = 3;
-    public static final int ARM_ENCODER_A = 9;
-    public static final int ARM_ENCODER_B = 8;
+    public static final int ARM_MOTOR = 9;
+    public static final int DRIVE_LEFT_ENCODER_A = 6;
+    public static final int DRIVE_LEFT_ENCODER_B = 7;
+    public static final int DRIVE_RIGHT_ENCODER_A = 8;
+    public static final int DRIVE_RIGHT_ENCODER_B = 9;
 
     
     // If you are using multiple modules, make sure to define both the port
