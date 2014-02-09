@@ -163,6 +163,9 @@ public class ChezyGyro extends SensorBase implements PIDSource, ISensor, LiveWin
    * @return 
    */
   public double getAngularVelocity(){
+      if (m_analog == null){
+          return 0.0;
+      }
       return m_analog.getAverageValue();
   }
 

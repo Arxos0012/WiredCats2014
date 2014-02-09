@@ -3,9 +3,8 @@
  * and open the template in the editor.
  */
 package edu.wpi.first.wpilibj.templates.commands;
+import Utilities.PID;
 import Utilities.WiredVector;
-import edu.wpi.first.wpilibj.command.Scheduler;
-import java.lang.Math;
 /**
  *
  * @author benbarber
@@ -13,13 +12,11 @@ import java.lang.Math;
 public class CommandArcadeDrive extends CommandBase{
     
     private float primaryTurnCoefficient = 0.8f;
-    private float SECONDARY_TURN_COEFFICIENT = 1.0f; 
     private float jsDeadband = 0.06f;
     private float interpolationBias = 0.7f;
-    private float LOW_SPEED_MAX = 12; //ft/s
     
-    private float UPPER_SHIFT_LIMIT = .8f * LOW_SPEED_MAX;
-    private float LOWER_SHIFT_LIMIT = 4; 
+    private float upperShiftLimit = 7.0f; // ft/s
+    private float lowerShiftLimit = 4.0f; // ft/s
     
     private WiredVector speeds;
     
@@ -35,9 +32,10 @@ public class CommandArcadeDrive extends CommandBase{
         primaryTurnCoefficient = (float)resources.getValue("primaryTurnCoefficient");
         jsDeadband = (float)resources.getValue("jsDeadband");
         interpolationBias = (float)resources.getValue("interpolationBias");
+        upperShiftLimit = (float)resources.getValue("upperShiftLimit");
+        lowerShiftLimit = (float)resources.getValue("lowerShiftLimit");
     }
 
-    // Called repeatedly when this Command is scheduled to run
     protected void execute() {
         
         double y = jsdriver.leftY();
@@ -54,8 +52,8 @@ public class CommandArcadeDrive extends CommandBase{
         double right;
         
         if(Math.abs(y) <= jsDeadband){
-            left = y + SECONDARY_TURN_COEFFICIENT*x;
-            right = y - SECONDARY_TURN_COEFFICIENT*x;
+            left = y + x;
+            right = y - x;
         }else{
             left = y + primaryTurnCoefficient*x;
             right = y - primaryTurnCoefficient*x;
@@ -63,16 +61,15 @@ public class CommandArcadeDrive extends CommandBase{
         
         //shifting code.
         float avgSpd = getAverageSpeed();
-        if (avgSpd > UPPER_SHIFT_LIMIT && !drivesubsystem.isHighSpeed()){
+        if (avgSpd > upperShiftLimit && !drivesubsystem.isHighSpeed()){
             drivesubsystem.setHighSpeed();
-        } else if (avgSpd < LOWER_SHIFT_LIMIT && drivesubsystem.isHighSpeed()){
+        } else if (avgSpd < lowerShiftLimit && drivesubsystem.isHighSpeed()){
             drivesubsystem.setLowSpeed();
         }
             
         //System.out.println("[WiredCats] Gyroscope: " + drivesubsystem.getAngle());
         
-        drivesubsystem.setLeft(left);
-        drivesubsystem.setRight(right);
+        drivesubsystem.setLeftRight(left,right);
     }
     
     /**
@@ -98,9 +95,13 @@ public class CommandArcadeDrive extends CommandBase{
     protected void end() {
     }
 
-    // Called when another command which requires one or more of the same
-    // subsystems is scheduled to run
+    /**
+     * Called when arcade drive is interrupted by
+     * another command. Make sure to power down any
+     * motors to avoid any nasty loss of control.
+     */
     protected void interrupted() {
         System.out.println("Arcade Drive interrupted.");
+        drivesubsystem.setLeftRight(0,0);
     }
 }

@@ -4,36 +4,34 @@
  * and open the template in the editor.
  */
 
-package edu.wpi.first.wpilibj.templates.commands;
+package edu.wpi.first.wpilibj.templates.commands.AutonomousCommands;
+
+import edu.wpi.first.wpilibj.templates.commands.CommandBase;
 
 /**
- *
+ * Drives in a straight line from whatever orientation
+ * the robot is in upon execution of the command.
  * @author WiredCats
  */
-public class CommandChangeSpeed extends CommandBase{
-
-    protected void initialize() {
-        if (drivesubsystem.isHighSpeed()){
-            drivesubsystem.setLowSpeed();
-        } else {
-            drivesubsystem.setHighSpeed();
-        }
+public class CommandStraightDrive extends CommandBase {
+    
+    public CommandStraightDrive(float distance){
+        
     }
 
+    protected void initialize() {
+   }
+
     protected void execute() {
-        
     }
 
     protected boolean isFinished() {
-        return true;
+        return false;
     }
 
     protected void end() {
-        
     }
 
     protected void interrupted() {
-        
     }
-      
 }
