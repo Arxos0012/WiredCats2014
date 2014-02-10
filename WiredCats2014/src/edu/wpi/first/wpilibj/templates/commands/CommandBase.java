@@ -30,8 +30,10 @@ public abstract class CommandBase extends Command {
         // which commands extend), subsystems are not guaranteed to be
         // yet. Thus, their requires() statements may grab null pointers. Bad
         // news. Don't move it.
-        jsdriver.a_button.whenReleased(new CommandTankDrive());
-        jsdriver.b_button.whenReleased(new CommandArcadeDrive());
+        resources.getFromFile("wiredCatsConfig.txt");
+        jsdriver.b_button.whenReleased(new CommandShift());
+        
+        drivesubsystem.init();
         // Show what command your subsystem is running on the SmartDashboard
         //SmartDashboard.putData("Autotune PID", new CommandAutotunePID());
     }

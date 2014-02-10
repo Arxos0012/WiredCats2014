@@ -3,11 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/WiredCats/Documents/NetBeansProjects/WiredCats2014/WiredCats2415/src/edu/wpi/first/wpilibj/templates/commands/CommandArcadeDrive.java</file>
-            <file>file:/C:/Users/WiredCats/Documents/NetBeansProjects/WiredCats2014/WiredCats2415/src/Utilities/TXTReader.java</file>
-            <file>file:/C:/Users/WiredCats/Documents/NetBeansProjects/WiredCats2014/WiredCats2415/src/edu/wpi/first/wpilibj/templates/WiredCatsRobot.java</file>
-            <file>file:/C:/Users/WiredCats/Documents/NetBeansProjects/WiredCats2014/WiredCats2415/src/edu/wpi/first/wpilibj/templates/commands/CommandBase.java</file>
-            <file>file:/C:/Users/WiredCats/Documents/NetBeansProjects/WiredCats2014/WiredCats2415/src/Utilities/GamePad.java</file>
+            <file>file:/C:/Users/WiredCats/Documents/GitHub/WiredCats2014/WiredCats2014/src/edu/wpi/first/wpilibj/templates/RobotMap.java</file>
+            <file>file:/C:/Users/WiredCats/Documents/GitHub/WiredCats2014/WiredCats2014/src/edu/wpi/first/wpilibj/templates/subsystems/SubSystemDrive.java</file>
         </group>
     </open-files>
 </project-private>

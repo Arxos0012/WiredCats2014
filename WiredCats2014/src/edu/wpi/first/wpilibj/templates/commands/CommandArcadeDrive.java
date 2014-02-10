@@ -3,51 +3,87 @@
  * and open the template in the editor.
  */
 package edu.wpi.first.wpilibj.templates.commands;
-import edu.wpi.first.wpilibj.command.Scheduler;
-import java.lang.Math;
+import Utilities.PID;
+import Utilities.WiredVector;
 /**
  *
  * @author benbarber
  */
 public class CommandArcadeDrive extends CommandBase{
     
-    public static float PRIMARY_TURN_COEFFICIENT = 0.8f;
-    public static float SECONDARY_TURN_COEFFICIENT = 1.0f;
+    private float primaryTurnCoefficient = 0.8f;
+    private float jsDeadband = 0.06f;
+    private float interpolationBias = 0.7f;
     
-    double DEADBAND = 0.06;
+    private float upperShiftLimit = 7.0f; // ft/s
+    private float lowerShiftLimit = 4.0f; // ft/s
+    
+    private WiredVector speeds;
     
     public CommandArcadeDrive() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
         requires(drivesubsystem);
+        speeds = new WiredVector();
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
+        primaryTurnCoefficient = (float)resources.getValue("primaryTurnCoefficient");
+        jsDeadband = (float)resources.getValue("jsDeadband");
+        interpolationBias = (float)resources.getValue("interpolationBias");
+        upperShiftLimit = (float)resources.getValue("upperShiftLimit");
+        lowerShiftLimit = (float)resources.getValue("lowerShiftLimit");
     }
 
-    // Called repeatedly when this Command is scheduled to run
     protected void execute() {
         
         double y = jsdriver.leftY();
         double x = jsdriver.rightX();
         
-        if(x <= -DEADBAND && x >= DEADBAND) x = 0;
-        if(y <= -DEADBAND && y >= DEADBAND) y = 0;
+        System.out.println(drivesubsystem.getSpeed());
+        
+        if(Math.abs(x) < jsDeadband) x = 0;
+        if(Math.abs(y) < jsDeadband) y = 0;
+        
+        y = interpolationBias*y + (1-interpolationBias)*y*y*y;
         
         double left;
         double right;
         
-        if(Math.abs(y) <= DEADBAND){
-            left = y - SECONDARY_TURN_COEFFICIENT*x;
-            right = y + SECONDARY_TURN_COEFFICIENT*x;
+        if(Math.abs(y) <= jsDeadband){
+            left = y + x;
+            right = y - x;
         }else{
-            left = y - PRIMARY_TURN_COEFFICIENT*x;
-            right = y + PRIMARY_TURN_COEFFICIENT*x;
+            left = y + primaryTurnCoefficient*x;
+            right = y - primaryTurnCoefficient*x;
         }
         
-        drivesubsystem.setLeft(left);
-        drivesubsystem.setRight(right);
+        //shifting code.
+        float avgSpd = getAverageSpeed();
+        if (avgSpd > upperShiftLimit && !drivesubsystem.isHighSpeed()){
+            drivesubsystem.setHighSpeed();
+        } else if (avgSpd < lowerShiftLimit && drivesubsystem.isHighSpeed()){
+            drivesubsystem.setLowSpeed();
+        }
+            
+        //System.out.println("[WiredCats] Gyroscope: " + drivesubsystem.getAngle());
+        
+        drivesubsystem.setLeftRight(left,right);
+    }
+    
+    /**
+     * Returns the average current speed of the drivetrain in feet/second.
+    */
+    public float getAverageSpeed(){
+        //TODO
+        float sum = 0;
+        speeds.addVal(drivesubsystem.getSpeed());
+        for (int i = 0; i < speeds.size(); i++){
+            sum+= speeds.getVal(i);
+        }
+        if (speeds.size() > 10) speeds.removeFirst();
+        return sum / speeds.size();
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -59,9 +95,13 @@ public class CommandArcadeDrive extends CommandBase{
     protected void end() {
     }
 
-    // Called when another command which requires one or more of the same
-    // subsystems is scheduled to run
+    /**
+     * Called when arcade drive is interrupted by
+     * another command. Make sure to power down any
+     * motors to avoid any nasty loss of control.
+     */
     protected void interrupted() {
         System.out.println("Arcade Drive interrupted.");
+        drivesubsystem.setLeftRight(0,0);
     }
 }
