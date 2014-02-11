@@ -3,15 +3,12 @@ package edu.wpi.first.wpilibj.templates.subsystems;
 
 import Utilities.ChezyGyro;
 import Utilities.PID;
-import edu.wpi.first.wpilibj.Gyro;
-import edu.wpi.first.wpilibj.Accelerometer;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.templates.RobotMap;
 import edu.wpi.first.wpilibj.templates.commands.CommandArcadeDrive;
-import edu.wpi.first.wpilibj.templates.commands.CommandTankDrive;
 
 /**
  *
@@ -22,7 +19,7 @@ public class SubSystemDrive extends Subsystem {
     public static final int TICKS_PER_REVOLUTION = 120;
     public static final int WHEEL_RADIUS = 2;
     public static final float WHEEL_CIRCUMFERENCE_FEET = (float)((WHEEL_RADIUS*2*Math.PI)/12);
-    public static final float TICKS_TO_FEET_PER_SECOND = WHEEL_CIRCUMFERENCE_FEET / TICKS_PER_REVOLUTION;
+    public static final float TICKS_TO_FEET = WHEEL_CIRCUMFERENCE_FEET / TICKS_PER_REVOLUTION;
     
     private Talon left = new Talon(RobotMap.DRIVE_LEFT_MOTOR_1);
     private Talon left2 = new Talon(RobotMap.DRIVE_LEFT_MOTOR_2);
@@ -44,6 +41,8 @@ public class SubSystemDrive extends Subsystem {
 
     public PID straightPID;
     public PID turnPID;
+    
+    public float MAX_VELOCITY = 16;
     
     public void init(){
         gyro.initGyro();
@@ -79,6 +78,12 @@ public class SubSystemDrive extends Subsystem {
         highSpeedSolenoid.set(false);
     }
     
+    public float getEncoderValue(){
+        int ticks = (leftEncoder.getRaw() + -rightEncoder.getRaw());
+        ticks /= 2;
+        return (TICKS_TO_FEET * ticks);
+    }
+    
     /**
      * Returns the speed of the robot in feet per second.
      * @return 
@@ -86,7 +91,7 @@ public class SubSystemDrive extends Subsystem {
     public float getSpeed(){
         float ticks = (float)(leftEncoder.getRate() + -rightEncoder.getRate());
         ticks /= 2;
-        return TICKS_TO_FEET_PER_SECOND * ticks;
+        return TICKS_TO_FEET * ticks;
     }
     
     public float getAngle(){
