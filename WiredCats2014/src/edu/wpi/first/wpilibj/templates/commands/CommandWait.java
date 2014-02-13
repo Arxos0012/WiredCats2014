@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package edu.wpi.first.wpilibj.templates.commands.AutonomousCommands;
+package edu.wpi.first.wpilibj.templates.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.templates.commands.CommandBase;

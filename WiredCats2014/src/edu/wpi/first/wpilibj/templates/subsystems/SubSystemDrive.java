@@ -3,15 +3,12 @@ package edu.wpi.first.wpilibj.templates.subsystems;
 
 import Utilities.ChezyGyro;
 import Utilities.PID;
-import edu.wpi.first.wpilibj.Gyro;
-import edu.wpi.first.wpilibj.Accelerometer;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.templates.RobotMap;
 import edu.wpi.first.wpilibj.templates.commands.CommandArcadeDrive;
-import edu.wpi.first.wpilibj.templates.commands.CommandTankDrive;
 
 /**
  *
@@ -24,10 +21,8 @@ public class SubSystemDrive extends Subsystem {
     public static final float WHEEL_CIRCUMFERENCE_FEET = (float)((WHEEL_RADIUS*2*Math.PI)/12);
     public static final float TICKS_TO_FEET_PER_SECOND = WHEEL_CIRCUMFERENCE_FEET / TICKS_PER_REVOLUTION;
     
-    private Talon left = new Talon(RobotMap.DRIVE_LEFT_MOTOR_1);
-    private Talon left2 = new Talon(RobotMap.DRIVE_LEFT_MOTOR_2);
-    private Talon right = new Talon(RobotMap.DRIVE_RIGHT_MOTOR_1);
-    private Talon right2 = new Talon(RobotMap.DRIVE_RIGHT_MOTOR_2);
+    private Talon left = new Talon(RobotMap.DRIVE_LEFT_MOTOR);
+    private Talon right = new Talon(RobotMap.DRIVE_RIGHT_MOTOR);
     private ChezyGyro gyro = new ChezyGyro(RobotMap.DRIVE_GYRO);
     //Accelerometer accel = new Accelerometer(RobotMap.DRIVE_ACCEL);
     private Encoder leftEncoder = new Encoder(RobotMap.DRIVE_LEFT_ENCODER_A,
@@ -64,9 +59,7 @@ public class SubSystemDrive extends Subsystem {
      */
     public void setLeftRight(double l, double r){
         left.set(l);
-        left2.set(l);
         right.set(-r);
-        right2.set(-r);
     }
     
     public void setHighSpeed(){

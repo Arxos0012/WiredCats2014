@@ -3,8 +3,15 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/Users/WiredCats/Documents/GitHub/WiredCats2014/WiredCats2014/src/edu/wpi/first/wpilibj/templates/commands/CommandBase.java</file>
             <file>file:/C:/Users/WiredCats/Documents/GitHub/WiredCats2014/WiredCats2014/src/edu/wpi/first/wpilibj/templates/RobotMap.java</file>
-            <file>file:/C:/Users/WiredCats/Documents/GitHub/WiredCats2014/WiredCats2014/src/edu/wpi/first/wpilibj/templates/subsystems/SubSystemDrive.java</file>
+            <file>file:/C:/Users/WiredCats/Documents/GitHub/WiredCats2014/WiredCats2014/src/edu/wpi/first/wpilibj/templates/commands/CommandCock.java</file>
+            <file>file:/C:/Users/WiredCats/Documents/GitHub/WiredCats2014/WiredCats2014/src/edu/wpi/first/wpilibj/templates/commands/CommandArcadeDrive.java</file>
+            <file>file:/C:/Users/WiredCats/Documents/GitHub/WiredCats2014/WiredCats2014/src/edu/wpi/first/wpilibj/templates/WiredCatsRobot.java</file>
+            <file>file:/C:/Users/WiredCats/Documents/GitHub/WiredCats2014/WiredCats2014/src/edu/wpi/first/wpilibj/templates/subsystems/SubSystemLDI.java</file>
+            <file>file:/C:/Users/WiredCats/Documents/GitHub/WiredCats2014/WiredCats2014/src/edu/wpi/first/wpilibj/templates/subsystems/SubSystemLauncher.java</file>
+            <file>file:/C:/Users/WiredCats/Documents/GitHub/WiredCats2014/WiredCats2014/src/edu/wpi/first/wpilibj/templates/commands/CommandAutotunePID.java</file>
+            <file>file:/C:/Users/WiredCats/Documents/GitHub/WiredCats2014/WiredCats2014/src/edu/wpi/first/wpilibj/templates/commands/CommandLaunch.java</file>
         </group>
     </open-files>
 </project-private>

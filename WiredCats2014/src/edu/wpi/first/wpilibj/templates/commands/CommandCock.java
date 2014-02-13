@@ -4,43 +4,40 @@
  * and open the template in the editor.
  */
 
-package edu.wpi.first.wpilibj.templates.commands.AutonomousCommands;
-
-import edu.wpi.first.wpilibj.templates.commands.CommandBase;
+package edu.wpi.first.wpilibj.templates.commands;
 
 /**
  *
  * @author WiredCats
  */
-public class CommandTurn extends CommandBase {
+public class CommandCock extends CommandBase{
 
-    /**
-     * Turns this many degrees from the current orientation.
-     * @param goal the desired orientation. 
-     */
-    public CommandTurn(float goal){
-        
+    public CommandCock(){ 
+        requires(launchersubsystem);
+        requires(ldisubsystem);
     }
     
     protected void initialize() {
-
+        
+        ldisubsystem.extend();
+        launchersubsystem.engageWench();
+        if (!launchersubsystem.hasHitLimit()) launchersubsystem.cock();
     }
 
     protected void execute() {
-
+        
     }
 
     protected boolean isFinished() {
-        //TODO
         return false;
     }
 
     protected void end() {
-
+        launchersubsystem.stopCocking();
     }
 
     protected void interrupted() {
-
+       launchersubsystem.stopCocking();
     }
     
 }
