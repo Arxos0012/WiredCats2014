@@ -5,10 +5,8 @@
 package Utilities;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import edu.wpi.first.wpilibj.templates.commands.CommandArcadeDrive;
-import edu.wpi.first.wpilibj.templates.commands.CommandTankDrive;
+import edu.wpi.first.wpilibj.buttons.Trigger;
 
 /**
  *
@@ -16,13 +14,27 @@ import edu.wpi.first.wpilibj.templates.commands.CommandTankDrive;
  */
 public class GamePad extends Joystick{
  
+    public Trigger leftTrigger;
+    public Trigger rightTrigger;
+    
     public JoystickButton a_button;
     public JoystickButton b_button;
+    public JoystickButton x_button;
+    public JoystickButton y_button;
+    
+    public JoystickButton rightBumper;
+    public JoystickButton leftBumper;
     
     public GamePad(int port){
         super(port);
         a_button = new JoystickButton(this, 1);
         b_button = new JoystickButton(this, 2);
+        x_button = new JoystickButton(this, 3);
+        y_button = new JoystickButton(this, 4);
+        
+        rightBumper = new JoystickButton(this, 6);
+        leftBumper = new JoystickButton(this, 5);
+        
     }
     
     public double leftY(){
@@ -37,8 +49,4 @@ public class GamePad extends Joystick{
         return this.getRawAxis(4);
     }
     
-    public boolean isAPressed(){
-        
-        return this.getRawButton(1);
-    }
 }

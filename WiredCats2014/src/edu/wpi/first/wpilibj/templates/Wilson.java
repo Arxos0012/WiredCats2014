@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj.templates.commands.CommandBase;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
-public class WiredCatsRobot extends IterativeRobot {
+public class Wilson extends IterativeRobot {
 
     Command autonomousCommand;
 

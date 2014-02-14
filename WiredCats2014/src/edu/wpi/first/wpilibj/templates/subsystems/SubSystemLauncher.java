@@ -34,7 +34,7 @@ public class SubSystemLauncher extends Subsystem {
     }
     
     public void cock(){
-        set(-1.0);
+        set(-0.5);
     }
     
     public boolean isCocking(){

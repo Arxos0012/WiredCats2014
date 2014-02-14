@@ -35,4 +35,5 @@ public class RobotMap {
     public static final int LAUNCHER_WINCH_MOTOR_2 = 4;
     
     public static final int INTAKE_POSITION_ACTUATOR = 8;
+    public static final int INTAKE_MOTOR = 5;
 }

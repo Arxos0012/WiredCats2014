@@ -1,6 +1,6 @@
 MIDlet-Name: WiredCats2415
 MIDlet-Version: 1.0.0
 MIDlet-Vendor: FIRST
-MIDlet-1: WiredCatsRobot, , edu.wpi.first.wpilibj.templates.WiredCatsRobot
+MIDlet-1: Wilson, , edu.wpi.first.wpilibj.templates.Wilson
 MicroEdition-Profile: IMP-1.0
 MicroEdition-Configuration: CLDC-1.1

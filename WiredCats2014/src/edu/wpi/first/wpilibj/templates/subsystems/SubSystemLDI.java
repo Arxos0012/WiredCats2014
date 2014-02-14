@@ -7,6 +7,7 @@
 package edu.wpi.first.wpilibj.templates.subsystems;
 
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.templates.RobotMap;
 
@@ -15,8 +16,9 @@ import edu.wpi.first.wpilibj.templates.RobotMap;
  * @author WiredCats
  */
 public class SubSystemLDI extends Subsystem{
-
+    
     Solenoid positionActuator = new Solenoid(RobotMap.INTAKE_POSITION_ACTUATOR);
+    Victor motor = new Victor(RobotMap.INTAKE_MOTOR);
     
     
     public SubSystemLDI(){
@@ -38,5 +40,9 @@ public class SubSystemLDI extends Subsystem{
     public boolean isExtended(){
         return positionActuator.get();
     }
+    
+    public void setMotor(double d){ motor.set(d); }
+    
+    
     
 }
