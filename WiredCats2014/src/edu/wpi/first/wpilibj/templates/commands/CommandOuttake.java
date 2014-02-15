@@ -10,35 +10,32 @@ package edu.wpi.first.wpilibj.templates.commands;
  *
  * @author WiredCats
  */
-public class CommandCock extends CommandBase{
-
-    public CommandCock(){ 
-        requires(launchersubsystem);
+public class CommandOuttake extends CommandBase{
+    
+    
+    public CommandOuttake(){
         requires(ldisubsystem);
     }
-    
+
     protected void initialize() {
-        System.out.println("Cocking");
         ldisubsystem.extend();
-        launchersubsystem.engageWench();
-        //if (!launchersubsystem.hasHitLimit()) launchersubsystem.cock();
-        launchersubsystem.cock();
+        ldisubsystem.outtake();
     }
 
     protected void execute() {
-        
     }
 
     protected boolean isFinished() {
-        return false; //launchersubsystem.hasHitLimit();
+        return false;
     }
 
     protected void end() {
-        launchersubsystem.stopCocking();
+        ldisubsystem.extend();
+        ldisubsystem.setMotor(0);
     }
 
     protected void interrupted() {
-       launchersubsystem.stopCocking();
+        ldisubsystem.extend();
+        ldisubsystem.setMotor(0);
     }
-    
 }

@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.templates.commands.CommandBase;
+import edu.wpi.first.wpilibj.templates.commands.CommandIntake;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -62,6 +63,11 @@ public class Wilson extends IterativeRobot {
      */
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+        
+        if ( CommandBase.jsdriver.leftTrigger() && 
+                !(CommandBase.ldisubsystem.getCurrentCommand() instanceof CommandIntake)){
+           Scheduler.getInstance().add(new CommandIntake());
+        }
     }
     
     /**

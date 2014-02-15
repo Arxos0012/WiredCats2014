@@ -17,7 +17,8 @@ import edu.wpi.first.wpilibj.templates.RobotMap;
  */
 public class SubSystemLDI extends Subsystem{
     
-    Solenoid positionActuator = new Solenoid(RobotMap.INTAKE_POSITION_ACTUATOR);
+    Solenoid extend = new Solenoid(RobotMap.INTAKE_SOLENOID_EXTEND);
+    Solenoid retract = new Solenoid(RobotMap.INTAKE_SOLENOID_RETRACT);
     Victor motor = new Victor(RobotMap.INTAKE_MOTOR);
     
     
@@ -30,15 +31,25 @@ public class SubSystemLDI extends Subsystem{
     }
     
     public void extend(){
-        positionActuator.set(true);
+        extend.set(true);
+        retract.set(false);
     }
     
     public void retract(){
-        positionActuator.set(false);
+        extend.set(false);
+        retract.set(true);
     }
     
     public boolean isExtended(){
-        return positionActuator.get();
+        return extend.get();
+    }
+    
+    public void intake(){
+        setMotor(-1.0);
+    }
+    
+    public void outtake(){
+        setMotor(1.0);
     }
     
     public void setMotor(double d){ motor.set(d); }

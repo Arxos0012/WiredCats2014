@@ -13,9 +13,6 @@ import edu.wpi.first.wpilibj.buttons.Trigger;
  * @author Robotics
  */
 public class GamePad extends Joystick{
- 
-    public Trigger leftTrigger;
-    public Trigger rightTrigger;
     
     public JoystickButton a_button;
     public JoystickButton b_button;
@@ -34,7 +31,6 @@ public class GamePad extends Joystick{
         
         rightBumper = new JoystickButton(this, 6);
         leftBumper = new JoystickButton(this, 5);
-        
     }
     
     public double leftY(){
@@ -49,4 +45,11 @@ public class GamePad extends Joystick{
         return this.getRawAxis(4);
     }
     
+    public boolean leftTrigger(){
+        return this.getRawAxis(3) > 0.1;
+    }
+    
+    public boolean rightTrigger(){
+        return this.getRawAxis(3) < 0.1;
+    }
 }

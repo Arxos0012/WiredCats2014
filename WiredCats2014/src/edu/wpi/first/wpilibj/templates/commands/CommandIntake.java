@@ -18,17 +18,18 @@ public class CommandIntake extends CommandBase{
     
     protected void initialize() {
         if(!ldisubsystem.isExtended()) ldisubsystem.extend();
-        ldisubsystem.setMotor(1.0);
+        ldisubsystem.intake();
     }
 
     protected void execute() {
     }
 
     protected boolean isFinished() {
-        return false;
+        return !jsdriver.leftTrigger();
     }
 
     protected void end() {
+        ldisubsystem.setMotor(0.0);
     }
 
     protected void interrupted() {

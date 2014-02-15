@@ -9,8 +9,10 @@ package edu.wpi.first.wpilibj.templates.subsystems;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Victor;
+
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.templates.RobotMap;
+import edu.wpi.first.wpilibj.templates.commands.CommandBase;
 
 /**
  *
@@ -20,9 +22,9 @@ public class SubSystemLauncher extends Subsystem {
     
     
     Victor[] winch = new Victor[2];
-//    DigitalInput limitSwitch = new DigitalInput(RobotMap.LAUNCHER_LIMIT_SWITCH);
     Solenoid launcherExtend = new Solenoid(RobotMap.LAUNCHER_RELEASE_SOLENOID_EXTEND);
     Solenoid launcherRetract = new Solenoid(RobotMap.LAUNCHER_RELEASE_SOLENOID_RETRACT);
+    DigitalInput limitSwitch = new DigitalInput(RobotMap.LAUNCHER_LIMIT_SWITCH);
     
     public SubSystemLauncher(){
         winch[0] = new Victor(RobotMap.LAUNCHER_WINCH_MOTOR_1);
@@ -34,7 +36,7 @@ public class SubSystemLauncher extends Subsystem {
     }
     
     public void cock(){
-        set(-0.5);
+        set(1.0);
     }
     
     public boolean isCocking(){
@@ -51,10 +53,16 @@ public class SubSystemLauncher extends Subsystem {
     }
     
     public boolean hasHitLimit(){
-        return false;
+        System.out.println("LimitSwitch value: " + limitSwitch.get());
+        return limitSwitch.get();
     }
     
     public void launch(){
+        if (!CommandBase.ldisubsystem.isExtended()){
+            System.out.println("Warning! Tried to launch when the "
+                    + "LDI was not extended! Launch aborted.");
+            return;
+        }
         launcherExtend.set(true);
         launcherRetract.set(false);
     }

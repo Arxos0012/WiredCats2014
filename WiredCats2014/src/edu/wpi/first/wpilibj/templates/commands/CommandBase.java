@@ -35,8 +35,9 @@ public abstract class CommandBase extends Command {
         // yet. Thus, their requires() statements may grab null pointers. Bad
         // news. Don't move it.
         resources.getFromFile("wiredCatsConfig.txt");
-        jsdriver.b_button.whenActive(new CommandLaunch());
-        jsdriver.y_button.whileHeld(new CommandCock());
+        jsdriver.y_button.whenPressed(new CommandLaunch());
+        jsdriver.b_button.whileHeld(new CommandCock());
+        jsdriver.leftBumper.whileHeld(new CommandOuttake());
         
         drivesubsystem.init();
         // Show what command your subsystem is running on the SmartDashboard
