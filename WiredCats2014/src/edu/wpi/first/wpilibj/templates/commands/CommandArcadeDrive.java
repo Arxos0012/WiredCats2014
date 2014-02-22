@@ -20,11 +20,14 @@ public class CommandArcadeDrive extends CommandBase{
     
     private WiredVector speeds;
     
+    private boolean straightDrive;
+    
     public CommandArcadeDrive() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
         requires(drivesubsystem);
         speeds = new WiredVector();
+        straightDrive = false;
     }
 
     // Called just before this Command runs the first time
@@ -45,6 +48,15 @@ public class CommandArcadeDrive extends CommandBase{
         
         if(Math.abs(x) < jsDeadband) x = 0;
         if(Math.abs(y) < jsDeadband) y = 0;
+        
+        if(x < 0 && y > 0){
+            if (!straightDrive) {
+                drivesubsystem.resetGyro();
+                straightDrive = true;
+            }
+            drivesubsystem.turnPID.pid(0, drivesubsystem.getAngle());
+            return;
+        } else straightDrive = false;
         
         y = interpolationBias*y + (1-interpolationBias)*y*y*y;
         

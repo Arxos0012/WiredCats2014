@@ -20,7 +20,7 @@ public class CommandLaunch extends CommandBase {
     }
     
     protected void initialize() {
-      launchersubsystem.launch();
+      if (!ldisubsystem.isExtended()) launchersubsystem.launch();
     }
 
     protected void execute() { }

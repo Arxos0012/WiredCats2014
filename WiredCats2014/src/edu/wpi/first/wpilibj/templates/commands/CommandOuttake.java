@@ -18,7 +18,7 @@ public class CommandOuttake extends CommandBase{
     }
 
     protected void initialize() {
-        ldisubsystem.extend();
+        ldisubsystem.retract();
         ldisubsystem.outtake();
     }
 
@@ -30,12 +30,10 @@ public class CommandOuttake extends CommandBase{
     }
 
     protected void end() {
-        ldisubsystem.extend();
         ldisubsystem.setMotor(0);
     }
 
     protected void interrupted() {
-        ldisubsystem.extend();
         ldisubsystem.setMotor(0);
     }
 }

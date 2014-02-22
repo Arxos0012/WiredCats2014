@@ -22,8 +22,8 @@ public class SubSystemLauncher extends Subsystem {
     
     
     Victor[] winch = new Victor[2];
-    Solenoid launcherExtend = new Solenoid(RobotMap.LAUNCHER_RELEASE_SOLENOID_EXTEND);
-    Solenoid launcherRetract = new Solenoid(RobotMap.LAUNCHER_RELEASE_SOLENOID_RETRACT);
+    Solenoid launcherWinchEngaged = new Solenoid(RobotMap.LAUNCHER_WINCH_ENGAGED);
+    Solenoid launcherWinchLaunch = new Solenoid(RobotMap.LAUNCHER_WINCH_LAUNCH);
     DigitalInput limitSwitch = new DigitalInput(RobotMap.LAUNCHER_LIMIT_SWITCH);
     
     public SubSystemLauncher(){
@@ -53,8 +53,8 @@ public class SubSystemLauncher extends Subsystem {
     }
     
     public boolean hasHitLimit(){
-        System.out.println("LimitSwitch value: " + limitSwitch.get());
-        return limitSwitch.get();
+        //System.out.println("LimitSwitch value: " + limitSwitch.get());
+        return !limitSwitch.get();
     }
     
     public void launch(){
@@ -63,15 +63,15 @@ public class SubSystemLauncher extends Subsystem {
                     + "LDI was not extended! Launch aborted.");
             return;
         }
-        launcherExtend.set(true);
-        launcherRetract.set(false);
+        launcherWinchEngaged.set(false);
+        launcherWinchLaunch.set(true);
     }
     
     /**
      * Ay Ay Ay, how you doin' baybe?
      */
     public void engageWench(){
-        launcherExtend.set(false);
-        launcherRetract.set(true);
+        launcherWinchEngaged.set(true);
+        launcherWinchLaunch.set(false);
     }
 }

@@ -19,6 +19,7 @@ public class CommandIntake extends CommandBase{
     protected void initialize() {
         if(!ldisubsystem.isExtended()) ldisubsystem.extend();
         ldisubsystem.intake();
+        try { Thread.sleep(1500); } catch (InterruptedException ie) {}
     }
 
     protected void execute() {
@@ -33,6 +34,7 @@ public class CommandIntake extends CommandBase{
     }
 
     protected void interrupted() {
+        ldisubsystem.setMotor(0);
     }
     
     

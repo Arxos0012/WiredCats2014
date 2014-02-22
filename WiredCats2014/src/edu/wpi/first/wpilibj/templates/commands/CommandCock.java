@@ -21,7 +21,8 @@ public class CommandCock extends CommandBase{
         System.out.println("Cocking");
         ldisubsystem.extend();
         launchersubsystem.engageWench();
-        //if (!launchersubsystem.hasHitLimit()) launchersubsystem.cock();
+        if (!launchersubsystem.hasHitLimit()) launchersubsystem.cock();
+        System.out.println("limitswitch: " + launchersubsystem.hasHitLimit());
         launchersubsystem.cock();
     }
 
@@ -30,7 +31,7 @@ public class CommandCock extends CommandBase{
     }
 
     protected boolean isFinished() {
-        return false; //launchersubsystem.hasHitLimit();
+        return launchersubsystem.hasHitLimit();
     }
 
     protected void end() {

@@ -13,7 +13,11 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.templates.commands.CommandBase;
+import edu.wpi.first.wpilibj.templates.commands.CommandCock;
+import edu.wpi.first.wpilibj.templates.commands.CommandGroupShoot;
 import edu.wpi.first.wpilibj.templates.commands.CommandIntake;
+import edu.wpi.first.wpilibj.templates.commands.CommandLaunch;
+import edu.wpi.first.wpilibj.templates.commands.CommandOuttake;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -67,6 +71,12 @@ public class Wilson extends IterativeRobot {
         if ( CommandBase.jsdriver.leftTrigger() && 
                 !(CommandBase.ldisubsystem.getCurrentCommand() instanceof CommandIntake)){
            Scheduler.getInstance().add(new CommandIntake());
+        }
+        if ( CommandBase.jsdriver.rightTrigger() && 
+                !(CommandBase.ldisubsystem.getCurrentCommand() instanceof CommandLaunch) &&
+                !(CommandBase.ldisubsystem.getCurrentCommand() instanceof CommandOuttake) &&
+                (CommandBase.ldisubsystem.isExtended() )){
+           Scheduler.getInstance().add(new CommandGroupShoot());
         }
     }
     

@@ -20,8 +20,8 @@ public class RobotMap {
     //analog
     public static final int DRIVE_GYRO = 1;
 //    public static final int DRIVE_ACCEL = 10;
-    public static final int DRIVE_LOW_SPEED_SOLENOID = 1;
-    public static final int DRIVE_HIGH_SPEED_SOLENOID = 2;
+    public static final int DRIVE_LOW_SPEED_SOLENOID = 5;
+    public static final int DRIVE_HIGH_SPEED_SOLENOID = 6;
     //digital
     public static final int DRIVE_LEFT_ENCODER_A = 1;
     public static final int DRIVE_LEFT_ENCODER_B = 2;
@@ -29,12 +29,12 @@ public class RobotMap {
     public static final int DRIVE_RIGHT_ENCODER_B = 4;
     
     public static final int LAUNCHER_LIMIT_SWITCH = 14;
-    public static final int LAUNCHER_RELEASE_SOLENOID_EXTEND = 3;
-    public static final int LAUNCHER_RELEASE_SOLENOID_RETRACT = 4;
+    public static final int LAUNCHER_WINCH_ENGAGED = 8;
+    public static final int LAUNCHER_WINCH_LAUNCH = 7;
     public static final int LAUNCHER_WINCH_MOTOR_1 = 6;
     public static final int LAUNCHER_WINCH_MOTOR_2 = 4;
     
-    public static final int INTAKE_SOLENOID_EXTEND = 5;
-    public static final int INTAKE_SOLENOID_RETRACT = 6;
+    public static final int INTAKE_SOLENOID_EXTEND = 3;
+    public static final int INTAKE_SOLENOID_RETRACT = 4;
     public static final int INTAKE_MOTOR = 5;
 }
