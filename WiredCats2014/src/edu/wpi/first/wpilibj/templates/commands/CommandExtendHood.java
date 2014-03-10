@@ -6,37 +6,32 @@
 
 package edu.wpi.first.wpilibj.templates.commands;
 
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.templates.commands.CommandBase;
-
 /**
  *
  * @author WiredCats
  */
-public class CommandWait extends CommandBase{
-    
-    private double time;
-    private Timer t;
-    
-    public CommandWait(double time){
-        this.time = time;
-    }
+public class CommandExtendHood extends CommandBase{
 
+    public CommandExtendHood(){
+        requires(ldisubsystem);
+    }
+    
     protected void initialize() {
-        t = new Timer();
-        t.start();
+       ldisubsystem.extend_hood();
     }
 
     protected void execute() {
     }
 
     protected boolean isFinished() {
-        return t.get() > time;
+        return true;
     }
 
     protected void end() {
     }
 
     protected void interrupted() {
+
     }
+    
 }

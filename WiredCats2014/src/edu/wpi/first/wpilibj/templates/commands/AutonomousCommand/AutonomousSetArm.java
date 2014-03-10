@@ -4,50 +4,43 @@
  * and open the template in the editor.
  */
 
-package edu.wpi.first.wpilibj.templates.commands;
+package edu.wpi.first.wpilibj.templates.commands.AutonomousCommand;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.templates.commands.CommandBase;
 
 /**
  *
  * @author WiredCats
  */
-public class CommandLaunch extends CommandBase {
+public class AutonomousSetArm extends CommandBase {
 
-    private static final int POST_LAUNCH_DELAY = 1;
-    
     Timer t;
     
-    public CommandLaunch(){
-        requires(launchersubsystem);
+    public AutonomousSetArm(){
         requires(ldisubsystem);
-        setTimeout(POST_LAUNCH_DELAY);
         t = new Timer();
     }
     
     protected void initialize() {
-      ldisubsystem.extend_hood();
-      t.start();
+        t.start();
+        ldisubsystem.extend_arm();
     }
 
-    protected void execute() { 
-        if (t.get() > 0.25){
-            launchersubsystem.launch();
-            t.stop();
-            t.reset();
-        }
+    protected void execute() {
+        if (t.get() > 0.5) ldisubsystem.retract_arm();
     }
 
     protected boolean isFinished() {
-        return isTimedOut();
+        return t.get() > 0.75;
     }
 
     protected void end() {
-        
+        ldisubsystem.retract_arm();
     }
 
     protected void interrupted() {
-        
+        ldisubsystem.retract_arm();
     }
     
 }

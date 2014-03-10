@@ -17,24 +17,28 @@ public class CommandIntake extends CommandBase{
     }
     
     protected void initialize() {
-        if(!ldisubsystem.isExtended()) ldisubsystem.extend();
-        ldisubsystem.intake();
-        try { Thread.sleep(1500); } catch (InterruptedException ie) {}
+        ldisubsystem.extend_arm();
+        ldisubsystem.motors_intake();
+        ldisubsystem.extend_hood();
     }
 
     protected void execute() {
     }
 
     protected boolean isFinished() {
-        return !jsdriver.leftTrigger();
+        return false;
     }
 
     protected void end() {
         ldisubsystem.setMotor(0.0);
+        ldisubsystem.retract_arm();
+        ldisubsystem.retract_hood();
     }
 
     protected void interrupted() {
         ldisubsystem.setMotor(0);
+        ldisubsystem.retract_arm();
+        ldisubsystem.retract_hood();
     }
     
     

@@ -3,6 +3,7 @@
  * and open the template in the editor.
  */
 package edu.wpi.first.wpilibj.templates.commands;
+import Utilities.DataFilters.FilterInputDeadband;
 import Utilities.PID;
 import Utilities.WiredVector;
 /**
@@ -22,6 +23,8 @@ public class CommandArcadeDrive extends CommandBase{
     
     private boolean straightDrive;
     
+    private FilterInputDeadband filter_db;
+    
     public CommandArcadeDrive() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
@@ -32,11 +35,17 @@ public class CommandArcadeDrive extends CommandBase{
 
     // Called just before this Command runs the first time
     protected void initialize() {
+        drivesubsystem.setLowSpeed();
+        updateValues();
+    }
+    
+    public void updateValues(){
         primaryTurnCoefficient = (float)resources.getValue("primaryTurnCoefficient");
         jsDeadband = (float)resources.getValue("jsDeadband");
         interpolationBias = (float)resources.getValue("interpolationBias");
         upperShiftLimit = (float)resources.getValue("upperShiftLimit");
         lowerShiftLimit = (float)resources.getValue("lowerShiftLimit");
+        filter_db = new FilterInputDeadband(jsDeadband);
     }
 
     protected void execute() {
@@ -44,49 +53,40 @@ public class CommandArcadeDrive extends CommandBase{
         double y = jsdriver.leftY();
         double x = jsdriver.rightX();
         
-        System.out.println(drivesubsystem.getSpeed());
+        if (Math.abs(x) < jsDeadband) x = 0;
+        if (Math.abs(y) < jsDeadband) y = 0;
         
-        if(Math.abs(x) < jsDeadband) x = 0;
-        if(Math.abs(y) < jsDeadband) y = 0;
-        
-        if(x < 0 && y > 0){
-            if (!straightDrive) {
-                drivesubsystem.resetGyro();
-                straightDrive = true;
-            }
-            drivesubsystem.turnPID.pid(0, drivesubsystem.getAngle());
-            return;
-        } else straightDrive = false;
+//        System.out.println("X: " + x + ", Y: " + y);
         
         y = interpolationBias*y + (1-interpolationBias)*y*y*y;
         
         double left;
         double right;
         
-        if(Math.abs(y) <= jsDeadband){
+        if(y == 0){
             left = y + x;
             right = y - x;
         }else{
             left = y + primaryTurnCoefficient*x;
             right = y - primaryTurnCoefficient*x;
         }
-        
-        //shifting code.
-        float avgSpd = getAverageSpeed();
-        if (avgSpd > upperShiftLimit && !drivesubsystem.isHighSpeed()){
-            drivesubsystem.setHighSpeed();
-        } else if (avgSpd < lowerShiftLimit && drivesubsystem.isHighSpeed()){
+//        if (Math.abs(x) < 0.20){
+//            //shift
+//            float avgSpd = Math.abs(getAverageSpeed());
+//            if (avgSpd > upperShiftLimit && !drivesubsystem.isHighSpeed()){
+//                drivesubsystem.setHighSpeed();
+//            } else if (avgSpd < lowerShiftLimit && drivesubsystem.isHighSpeed()){
+//                drivesubsystem.setLowSpeed();
+//            }
+//        }
+        if (jsdriver.rightTrigger()){
             drivesubsystem.setLowSpeed();
-        }
-            
-        //System.out.println("[WiredCats] Gyroscope: " + drivesubsystem.getAngle());
+        } else { drivesubsystem.setHighSpeed(); } 
         
         drivesubsystem.setLeftRight(left,right);
     }
     
-    /**
-     * Returns the average current speed of the drivetrain in feet/second.
-    */
+    
     public float getAverageSpeed(){
         //TODO
         float sum = 0;

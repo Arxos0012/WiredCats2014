@@ -4,45 +4,35 @@
  * and open the template in the editor.
  */
 
-package edu.wpi.first.wpilibj.templates.commands;
+package edu.wpi.first.wpilibj.templates.commands.AutonomousCommand;
 
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.templates.commands.CommandBase;
 import edu.wpi.first.wpilibj.templates.commands.CommandBase;
 
 /**
  *
  * @author WiredCats
  */
-public class CommandTurn extends CommandBase {
-
-      
+public class AutonomousWait extends CommandBase{
     
-    /**
-     * Turns this many degrees from the current orientation.
-     * @param goal the desired orientation. 
-     */
-    public CommandTurn(float goal){
-        
+    public AutonomousWait(float time){
+        setTimeout(time);
     }
-    
-    protected void initialize() {
 
+    protected void initialize() {
     }
 
     protected void execute() {
-
     }
 
     protected boolean isFinished() {
-        //TODO
-        return false;
+        return isTimedOut();
     }
 
     protected void end() {
-
     }
 
     protected void interrupted() {
-
     }
-    
 }

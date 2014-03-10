@@ -6,32 +6,33 @@
 
 package edu.wpi.first.wpilibj.templates.commands;
 
-import edu.wpi.first.wpilibj.templates.commands.CommandBase;
-
 /**
- * Drives in a straight line from whatever orientation
- * the robot is in upon execution of the command.
+ *
  * @author WiredCats
  */
-public class CommandStraightDrive extends CommandBase {
-    
-    public CommandStraightDrive(float distance){
-        
-    }
+public class CommandRetractHood extends CommandBase{
 
+    public CommandRetractHood(){
+        requires(ldisubsystem);
+    }
+    
     protected void initialize() {
-   }
+        ldisubsystem.retract_hood();
+    }
 
     protected void execute() {
     }
 
     protected boolean isFinished() {
-        return false;
+        return true;
     }
 
     protected void end() {
+
     }
 
     protected void interrupted() {
+
     }
+    
 }

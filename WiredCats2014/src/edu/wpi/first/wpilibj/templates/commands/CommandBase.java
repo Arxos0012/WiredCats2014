@@ -36,9 +36,15 @@ public abstract class CommandBase extends Command {
         // news. Don't move it.
         resources.getFromFile("wiredCatsConfig.txt");
         
-        jsdriver.y_button.whenPressed(new CommandLaunch());
-        jsdriver.b_button.whenPressed(new CommandCock());
-        jsdriver.leftBumper.whenPressed(new CommandOuttake());
+        jsdriver.leftBumper.whileHeld(new CommandOuttake());
+        jsdriver.y_button.whenPressed(new CommandCock());
+        jsdriver.x_button.whenPressed(new CommandGroupShoot());
+        jsdriver.rightBumper.whileHeld(new CommandIntake());
+        jsdriver.a_button.whenPressed(new CommandExtendHood());
+        jsdriver.a_button.whenReleased(new CommandRetractHood());
+        
+        //IN WILSON FILE: LEFT TRIGGER INTAKE
+        //                RIGHT TRIGGER LAUNCH
         
         drivesubsystem.init();
         // Show what command your subsystem is running on the SmartDashboard
@@ -48,6 +54,8 @@ public abstract class CommandBase extends Command {
     public CommandBase(String name) {
         super(name);
     }
+    
+    public void updateValues(){}
 
     public CommandBase() {
         super();

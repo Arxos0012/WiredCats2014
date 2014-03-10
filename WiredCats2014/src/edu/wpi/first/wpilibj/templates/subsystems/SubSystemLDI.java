@@ -17,34 +17,47 @@ import edu.wpi.first.wpilibj.templates.RobotMap;
  */
 public class SubSystemLDI extends Subsystem{
     
-    Solenoid extend = new Solenoid(RobotMap.INTAKE_SOLENOID_EXTEND);
-    Solenoid retract = new Solenoid(RobotMap.INTAKE_SOLENOID_RETRACT);
+    Solenoid extend_arm = new Solenoid(RobotMap.INTAKE_SOLENOID_EXTEND);
+    Solenoid retract_arm = new Solenoid(RobotMap.INTAKE_SOLENOID_RETRACT);
     Victor motor = new Victor(RobotMap.INTAKE_MOTOR);
+    
+    Solenoid extend_hood = new Solenoid(RobotMap.EXTEND_HOOD);
+    Solenoid retract_hood = new Solenoid(RobotMap.RETRACT_HOOD);
     
     
     public SubSystemLDI(){
-        
+        retract_arm();
     }
     
     protected void initDefaultCommand() {
         
     }
     
-    public void extend(){
-        extend.set(true);
-        retract.set(false);
+    public void extend_arm(){
+        extend_arm.set(true);
+        retract_arm.set(false);
     }
     
-    public void retract(){
-        extend.set(false);
-        retract.set(true);
+    public void retract_arm(){
+        extend_arm.set(false);
+        retract_arm.set(true);
+    }
+    
+    public void extend_hood(){
+        extend_hood.set(true);
+        retract_hood.set(false);
+    }
+    
+    public void retract_hood(){
+        extend_hood.set(false);
+        retract_hood.set(true);
     }
     
     public boolean isExtended(){
-        return extend.get();
+        return extend_arm.get();
     }
     
-    public void intake(){
+    public void motors_intake(){
         setMotor(-1.0);
     }
     

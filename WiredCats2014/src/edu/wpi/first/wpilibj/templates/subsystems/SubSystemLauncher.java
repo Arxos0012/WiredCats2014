@@ -6,6 +6,7 @@
 
 package edu.wpi.first.wpilibj.templates.subsystems;
 
+import edu.wpi.first.wpilibj.AnalogChannel;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Victor;
@@ -26,9 +27,14 @@ public class SubSystemLauncher extends Subsystem {
     Solenoid launcherWinchLaunch = new Solenoid(RobotMap.LAUNCHER_WINCH_LAUNCH);
     DigitalInput limitSwitch = new DigitalInput(RobotMap.LAUNCHER_LIMIT_SWITCH);
     
+    AnalogChannel HESensor = new AnalogChannel(RobotMap.LAUNCHER_HALL_EFFECT);
+    
+    boolean fired;
+    
     public SubSystemLauncher(){
         winch[0] = new Victor(RobotMap.LAUNCHER_WINCH_MOTOR_1);
         winch[1] = new Victor(RobotMap.LAUNCHER_WINCH_MOTOR_2);
+        fired = false;
     }
 
     protected void initDefaultCommand() {
@@ -40,7 +46,7 @@ public class SubSystemLauncher extends Subsystem {
     }
     
     public boolean isCocking(){
-        return winch[0].get() > 0.0;
+        return winch[0].get() != 0.0;
     }
     
     public void stopCocking(){
@@ -53,18 +59,34 @@ public class SubSystemLauncher extends Subsystem {
     }
     
     public boolean hasHitLimit(){
-        //System.out.println("LimitSwitch value: " + limitSwitch.get());
         return !limitSwitch.get();
     }
     
+    public double getHESensorVoltage(){
+        return HESensor.getVoltage();
+    }
+    
+    /**
+     * Returns whether or not the Hall effect sensor
+     * has been triggered and the arm is winched down.
+     * @return 
+     */
+    public boolean hitHESensor(){
+        return getHESensorVoltage() <  0.3;
+    }
+    
+    public boolean isFired(){
+        return fired;
+    }
+    
+    public void setFired(boolean b){
+        fired = b;
+    }
+    
     public void launch(){
-        if (!CommandBase.ldisubsystem.isExtended()){
-            System.out.println("Warning! Tried to launch when the "
-                    + "LDI was not extended! Launch aborted.");
-            return;
-        }
         launcherWinchEngaged.set(false);
         launcherWinchLaunch.set(true);
+        setFired(true);
     }
     
     /**

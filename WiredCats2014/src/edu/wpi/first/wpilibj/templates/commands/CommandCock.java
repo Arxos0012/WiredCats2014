@@ -6,12 +6,17 @@
 
 package edu.wpi.first.wpilibj.templates.commands;
 
+import edu.wpi.first.wpilibj.Timer;
+
 /**
  *
  * @author WiredCats
  */
 public class CommandCock extends CommandBase{
-
+    
+    double slowPower;
+    double slowDelay;
+    
     public CommandCock(){ 
         requires(launchersubsystem);
         requires(ldisubsystem);
@@ -19,11 +24,11 @@ public class CommandCock extends CommandBase{
     
     protected void initialize() {
         System.out.println("Cocking");
-        ldisubsystem.extend();
+        ldisubsystem.extend_hood();
         launchersubsystem.engageWench();
-        if (!launchersubsystem.hasHitLimit()) launchersubsystem.cock();
-        System.out.println("limitswitch: " + launchersubsystem.hasHitLimit());
-        launchersubsystem.cock();
+        if (launchersubsystem.isFired())launchersubsystem.cock();
+        slowPower = resources.getValue("slowPower");
+        slowDelay = resources.getValue("slowDelay");
     }
 
     protected void execute() {
@@ -31,15 +36,20 @@ public class CommandCock extends CommandBase{
     }
 
     protected boolean isFinished() {
-        return launchersubsystem.hasHitLimit();
+        return !launchersubsystem.isFired() |
+                launchersubsystem.hitHESensor();
     }
 
     protected void end() {
         launchersubsystem.stopCocking();
+        launchersubsystem.setFired(false);
+        ldisubsystem.retract_hood();
     }
 
     protected void interrupted() {
        launchersubsystem.stopCocking();
+       launchersubsystem.setFired(false);
+       ldisubsystem.retract_hood();
     }
     
 }

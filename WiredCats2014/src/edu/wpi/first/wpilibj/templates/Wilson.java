@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.templates.commands.AutonomousCommand.CommandAutonomous;
 import edu.wpi.first.wpilibj.templates.commands.CommandBase;
 import edu.wpi.first.wpilibj.templates.commands.CommandCock;
 import edu.wpi.first.wpilibj.templates.commands.CommandGroupShoot;
@@ -39,6 +40,7 @@ public class Wilson extends IterativeRobot {
 //        autonomousCommand = new  whatever our command will be
         // Initialize all subsystems
         CommandBase.init();
+        autonomousCommand = new CommandAutonomous();
     }
 
     public void autonomousInit() {
@@ -58,8 +60,19 @@ public class Wilson extends IterativeRobot {
         // teleop starts running. If you want the autonomous to 
         // continue until interrupted by another command, remove
         // this line or comment it out.
-        //autonomousCommand.cancel();
+        autonomousCommand.cancel();
         CommandBase.resources.getFromFile("wiredCatsConfig.txt");
+        if (CommandBase.drivesubsystem.getCurrentCommand() != null){
+            ((CommandBase)CommandBase.drivesubsystem.getCurrentCommand()).updateValues();
+        }
+        if (CommandBase.ldisubsystem.getCurrentCommand() != null){
+            ((CommandBase)CommandBase.drivesubsystem.getCurrentCommand()).updateValues();
+        }
+        if (CommandBase.launchersubsystem.getCurrentCommand() != null){
+            ((CommandBase)CommandBase.drivesubsystem.getCurrentCommand()).updateValues();
+        }
+        
+        System.out.println("[WiredCats] Updating Values.");
     }
 
     /**
@@ -68,16 +81,17 @@ public class Wilson extends IterativeRobot {
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
         
-        if ( CommandBase.jsdriver.leftTrigger() && 
-                !(CommandBase.ldisubsystem.getCurrentCommand() instanceof CommandIntake)){
-           Scheduler.getInstance().add(new CommandIntake());
-        }
-        if ( CommandBase.jsdriver.rightTrigger() && 
-                !(CommandBase.ldisubsystem.getCurrentCommand() instanceof CommandLaunch) &&
-                !(CommandBase.ldisubsystem.getCurrentCommand() instanceof CommandOuttake) &&
-                (CommandBase.ldisubsystem.isExtended() )){
-           Scheduler.getInstance().add(new CommandGroupShoot());
-        }
+//        if ( CommandBase.jsdriver.leftTrigger() && 
+//                !(CommandBase.ldisubsystem.getCurrentCommand() instanceof CommandIntake)){
+//           Scheduler.getInstance().add(new CommandIntake());
+//        }
+//        if ( CommandBase.jsdriver.rightTrigger() && 
+//                !(CommandBase.ldisubsystem.getCurrentCommand() instanceof CommandLaunch) &&
+//                !(CommandBase.ldisubsystem.getCurrentCommand() instanceof CommandOuttake) &&
+//                (CommandBase.ldisubsystem.isExtended() )){
+//           Scheduler.getInstance().add(new CommandLaunch());
+//        }
+        System.out.println(CommandBase.launchersubsystem.hitHESensor());
     }
     
     /**
