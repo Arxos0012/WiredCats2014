@@ -46,10 +46,10 @@ public class GamePad extends Joystick{
     }
     
     public boolean leftTrigger(){
-        return this.getRawAxis(3) > 0.5;
+        return this.getRawAxis(3) > 0.75;
     }
     
     public boolean rightTrigger(){
-        return this.getRawAxis(3) < -0.5;
+        return this.getRawAxis(3) < -0.75;
     }
 }

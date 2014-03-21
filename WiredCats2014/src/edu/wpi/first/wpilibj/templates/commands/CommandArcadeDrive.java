@@ -79,7 +79,7 @@ public class CommandArcadeDrive extends CommandBase{
 //                drivesubsystem.setLowSpeed();
 //            }
 //        }
-        if (jsdriver.rightTrigger()){
+        if (jsdriver.leftTrigger()){
             drivesubsystem.setLowSpeed();
         } else { drivesubsystem.setHighSpeed(); } 
         

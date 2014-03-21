@@ -10,9 +10,9 @@ package edu.wpi.first.wpilibj.templates.commands;
  *
  * @author WiredCats
  */
-public class CommandIntake extends CommandBase{
+public class CommandLastMinuteShit extends CommandBase{
 
-    public CommandIntake(){
+    public CommandLastMinuteShit(){
         requires(ldisubsystem);
     }
     
@@ -30,15 +30,11 @@ public class CommandIntake extends CommandBase{
     }
 
     protected void end() {
-        ldisubsystem.setMotor(0.0);
         ldisubsystem.retract_arm();
-        ldisubsystem.retract_hood();
     }
 
     protected void interrupted() {
-        ldisubsystem.setMotor(0);
         ldisubsystem.retract_arm();
-        ldisubsystem.retract_hood();
     }
     
     

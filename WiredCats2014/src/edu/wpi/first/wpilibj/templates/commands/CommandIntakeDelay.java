@@ -10,33 +10,33 @@ package edu.wpi.first.wpilibj.templates.commands;
  *
  * @author WiredCats
  */
-public class CommandOuttake extends CommandBase{
-    
-    
-    public CommandOuttake(){
+public class CommandIntakeDelay extends CommandBase{
+
+    public CommandIntakeDelay(){
+        this.setTimeout(0.5);
         requires(ldisubsystem);
     }
-
+    
     protected void initialize() {
-        ldisubsystem.retract_arm();
-        ldisubsystem.outtake();
-        ldisubsystem.extend_hood();
+
     }
 
     protected void execute() {
+
     }
 
     protected boolean isFinished() {
-        return false;
+        return isTimedOut();
     }
 
     protected void end() {
-        ldisubsystem.setIntakeMotors(0);
+        ldisubsystem.setIntakeMotors(0.0);
         ldisubsystem.retract_hood();
     }
 
     protected void interrupted() {
-        ldisubsystem.setIntakeMotors(0);
+        ldisubsystem.setIntakeMotors(0.0);
         ldisubsystem.retract_hood();
     }
+    
 }

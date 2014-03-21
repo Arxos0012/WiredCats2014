@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.templates.RobotMap;
+import edu.wpi.first.wpilibj.templates.commands.CommandLastMinuteShit;
 
 /**
  *
@@ -19,7 +20,8 @@ public class SubSystemLDI extends Subsystem{
     
     Solenoid extend_arm = new Solenoid(RobotMap.INTAKE_SOLENOID_EXTEND);
     Solenoid retract_arm = new Solenoid(RobotMap.INTAKE_SOLENOID_RETRACT);
-    Victor motor = new Victor(RobotMap.INTAKE_MOTOR);
+    Victor motor_1 = new Victor(RobotMap.INTAKE_MOTOR_1);
+    Victor motor_2 = new Victor(RobotMap.INTAKE_MOTOR_2);
     
     Solenoid extend_hood = new Solenoid(RobotMap.EXTEND_HOOD);
     Solenoid retract_hood = new Solenoid(RobotMap.RETRACT_HOOD);
@@ -30,7 +32,6 @@ public class SubSystemLDI extends Subsystem{
     }
     
     protected void initDefaultCommand() {
-        
     }
     
     public void extend_arm(){
@@ -58,14 +59,17 @@ public class SubSystemLDI extends Subsystem{
     }
     
     public void motors_intake(){
-        setMotor(-1.0);
+        setIntakeMotors(-1.0);
     }
     
     public void outtake(){
-        setMotor(1.0);
+        setIntakeMotors(1.0);
     }
     
-    public void setMotor(double d){ motor.set(d); }
+    public void setIntakeMotors(double d){ 
+        motor_1.set(d); 
+        motor_2.set(-d);
+    }    
     
     
     

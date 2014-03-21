@@ -35,4 +35,10 @@ public class AutonomousWait extends CommandBase{
 
     protected void interrupted() {
     }
+    
+    public int parameter(){ return 1; }
+    
+    public void autoParameters(float[] vals){
+        this.setTimeout((double)vals[0]);
+    }
 }

@@ -24,13 +24,31 @@ public class AutonomousStraightDrive extends CommandBase {
     private float destination;
     private float currPosition;
     private float currVelocity;
+    private boolean forwards;
     
-    public AutonomousStraightDrive(float time){
-        super.setTimeout( (double)(time));
+    public AutonomousStraightDrive(float time, boolean forwards){
+        requires(drivesubsystem);
+        super.setTimeout(time);
         speeds = new WiredVector();
         drivesubsystem.resetEncoders();
         destination = time;
+        this.forwards = forwards;
     }
+    
+    public AutonomousStraightDrive(){
+        requires(drivesubsystem);
+    }
+    
+    public int parameter() { return 2; } 
+    
+    public void autoInit(float[] vals){
+        super.setTimeout(vals[0]);
+        speeds = new WiredVector();
+        drivesubsystem.resetEncoders();
+//        destination = vals[0];
+        this.forwards = vals[1] == 0;
+    }
+    
     protected void initialize() {
         //zero at our current angle.
         drivesubsystem.resetGyro();
@@ -39,8 +57,8 @@ public class AutonomousStraightDrive extends CommandBase {
     protected void execute() {
 //       
 //       
-       drivesubsystem.setLeftRight(.5, .5);
-       
+        if(forwards) drivesubsystem.setLeftRight(-1, -1);
+        else drivesubsystem.setLeftRight(1,1);
 //       currVelocity = drivesubsystem.getSpeed();
 //        
 //       float power = drivesubsystem.straightPID.pid(getDesiredVelocity(), currVelocity);
@@ -77,6 +95,7 @@ public class AutonomousStraightDrive extends CommandBase {
         return sum / speeds.size();
     }
     protected boolean isFinished() {
+        float dist = drivesubsystem.getDistance();
         return isTimedOut();
     }
     protected void end() {

@@ -12,7 +12,10 @@ public class RobotMap {
     // public static final int leftMotor = 1;
     // public static final int rightMotor = 2;
     
-    public static final int DRIVER = 1;
+    
+    //Joystick index values.
+    public static final int JS_DRIVER = 1;
+    public static final int JS_SUPPORT = 2;
     
     //PWM
     public static final int DRIVE_LEFT_MOTOR = 1;
@@ -29,15 +32,24 @@ public class RobotMap {
     public static final int DRIVE_RIGHT_ENCODER_B = 4;
     
     public static final int LAUNCHER_LIMIT_SWITCH = 14;
-    public static final int LAUNCHER_WINCH_ENGAGED = 8;
-    public static final int LAUNCHER_WINCH_LAUNCH = 7;
+    public static final int LAUNCHER_WINCH_ENGAGED = 4;// practice : 8
+    public static final int LAUNCHER_WINCH_LAUNCH = 3; // practice : 7
+    
+    //winch 3,4
+    //shifting 5,6
+    //intake 7,8
+    //hood 1,2
     public static final int LAUNCHER_WINCH_MOTOR_1 = 3; // competition: 6
     public static final int LAUNCHER_WINCH_MOTOR_2 = 4;
     public static final int LAUNCHER_HALL_EFFECT = 1;
     
-    public static final int INTAKE_SOLENOID_EXTEND = 4;
-    public static final int INTAKE_SOLENOID_RETRACT = 3;
-    public static final int INTAKE_MOTOR = 5;
+    public static final int INTAKE_SOLENOID_EXTEND = 7;
+    public static final int INTAKE_SOLENOID_RETRACT = 8;
+    public static final int INTAKE_MOTOR_1 = 5;
+    public static final int INTAKE_MOTOR_2 = 6;
     public static final int EXTEND_HOOD = 1;
     public static final int RETRACT_HOOD = 2;
+    
+    public static final int COMPRESSOR_PRESSURE_SWITCH = 13;
+    public static final int COMPRESSOR_RELAY_CHANNEL = 8; // competition 1!!!!
 }

@@ -17,6 +17,7 @@ public class CommandGroupShoot extends CommandGroup{
     public CommandGroupShoot(){
         addSequential(new CommandLaunch());
         addSequential(new CommandCock());
+        setInterruptible(false);
     }
     
 }

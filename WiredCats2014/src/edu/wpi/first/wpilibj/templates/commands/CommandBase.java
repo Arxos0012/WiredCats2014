@@ -2,6 +2,7 @@ package edu.wpi.first.wpilibj.templates.commands;
 
 import Utilities.GamePad;
 import Utilities.TXTReader;
+import com.sun.squawk.util.SimpleLinkedList;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.templates.OI;
@@ -9,6 +10,7 @@ import edu.wpi.first.wpilibj.templates.RobotMap;
 import edu.wpi.first.wpilibj.templates.subsystems.SubSystemDrive;
 import edu.wpi.first.wpilibj.templates.subsystems.SubSystemLDI;
 import edu.wpi.first.wpilibj.templates.subsystems.SubSystemLauncher;
+import java.util.Vector;
 
 /**
  * The base for all commands. All atomic commands should subclass CommandBase.
@@ -26,29 +28,37 @@ public abstract class CommandBase extends Command {
     public static SubSystemLauncher launchersubsystem = new SubSystemLauncher();
     public static SubSystemLDI ldisubsystem = new SubSystemLDI();
     
-    public static GamePad jsdriver = new GamePad(RobotMap.DRIVER);
+    public static GamePad jsdriver = new GamePad(RobotMap.JS_DRIVER);
+    public static GamePad jssupport = new GamePad(RobotMap.JS_SUPPORT);
+    
+    public CommandBase(){
+        super();
+    }
     
     public static void init() {
-        // This MUST be here. If the OI creates Commands (which it very likely
-        // will), constructing it during the construction of CommandBase (from
-        // which commands extend), subsystems are not guaranteed to be
-        // yet. Thus, their requires() statements may grab null pointers. Bad
-        // news. Don't move it.
+        
         resources.getFromFile("wiredCatsConfig.txt");
         
+        //DRIVER
         jsdriver.leftBumper.whileHeld(new CommandOuttake());
-        jsdriver.y_button.whenPressed(new CommandCock());
-        jsdriver.x_button.whenPressed(new CommandGroupShoot());
-        jsdriver.rightBumper.whileHeld(new CommandIntake());
-        jsdriver.a_button.whenPressed(new CommandExtendHood());
-        jsdriver.a_button.whenReleased(new CommandRetractHood());
+        jsdriver.rightBumper.whenPressed(new CommandLastMinuteShit());
+        jsdriver.rightBumper.whenReleased(new CommandIntakeDelay());
+
         
-        //IN WILSON FILE: LEFT TRIGGER INTAKE
-        //                RIGHT TRIGGER LAUNCH
+        //SUPPORT
+//        jssupport.y_button.whenPressed(new CommandCock());
+        jssupport.a_button.whenPressed(new CommandExtendHood());
+        jssupport.a_button.whenReleased(new CommandRetractHood());
         
         drivesubsystem.init();
-        // Show what command your subsystem is running on the SmartDashboard
-        //SmartDashboard.putData("Autotune PID", new CommandAutotunePID());
+    }
+    
+    public int autoParameters(){
+        return 0;
+    }
+    
+    public void autoInit(float[] vals){
+        
     }
 
     public CommandBase(String name) {
@@ -57,7 +67,4 @@ public abstract class CommandBase extends Command {
     
     public void updateValues(){}
 
-    public CommandBase() {
-        super();
-    }
 }

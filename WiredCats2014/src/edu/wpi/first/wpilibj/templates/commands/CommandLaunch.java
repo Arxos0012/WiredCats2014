@@ -23,6 +23,7 @@ public class CommandLaunch extends CommandBase {
         requires(ldisubsystem);
         setTimeout(POST_LAUNCH_DELAY);
         t = new Timer();
+        setInterruptible(false);
     }
     
     protected void initialize() {

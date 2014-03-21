@@ -20,6 +20,7 @@ public class CommandCock extends CommandBase{
     public CommandCock(){ 
         requires(launchersubsystem);
         requires(ldisubsystem);
+        setInterruptible(false);
     }
     
     protected void initialize() {
@@ -32,7 +33,9 @@ public class CommandCock extends CommandBase{
     }
 
     protected void execute() {
-        
+        ldisubsystem.extend_hood();
+        launchersubsystem.engageWench();
+        if (launchersubsystem.isFired())launchersubsystem.cock();
     }
 
     protected boolean isFinished() {

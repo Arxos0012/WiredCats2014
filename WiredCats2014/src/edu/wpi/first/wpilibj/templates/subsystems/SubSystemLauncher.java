@@ -42,7 +42,7 @@ public class SubSystemLauncher extends Subsystem {
     }
     
     public void cock(){
-        set(1.0);
+        set(1.0);//different on practice bot.
     }
     
     public boolean isCocking(){
@@ -55,7 +55,7 @@ public class SubSystemLauncher extends Subsystem {
     
     public void set(double d){
         winch[0].set(d);
-        winch[1].set(d);
+        winch[1].set(-d);
     }
     
     public boolean hasHitLimit(){

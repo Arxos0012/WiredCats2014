@@ -8,27 +8,15 @@ package edu.wpi.first.wpilibj.templates.commands.AutonomousCommand;
 
 import edu.wpi.first.wpilibj.templates.commands.CommandBase;
 
-
 /**
  *
  * @author WiredCats
  */
-public class AutonomousIntake extends CommandBase{
+public class AutonomousLastMinuteShit extends CommandBase{
 
-    public AutonomousIntake(double timeout){
-        requires(ldisubsystem);
-        this.setTimeout(timeout);
-    }
-    
-    public AutonomousIntake(){
+    public AutonomousLastMinuteShit(){
         requires(ldisubsystem);
     }
-    
-    public void autoInit(float[] vals){
-        this.setTimeout(vals[0]);
-    }
-    
-    public int autoParameter() { return 1; }
     
     protected void initialize() {
         ldisubsystem.extend_arm();
@@ -40,17 +28,14 @@ public class AutonomousIntake extends CommandBase{
     }
 
     protected boolean isFinished() {
-        return isTimedOut();
+        return true;
     }
 
     protected void end() {
-        ldisubsystem.retract_arm();
-        ldisubsystem.retract_hood();
     }
 
     protected void interrupted() {
-        ldisubsystem.retract_arm();
-        ldisubsystem.retract_hood();
     }
+    
     
 }

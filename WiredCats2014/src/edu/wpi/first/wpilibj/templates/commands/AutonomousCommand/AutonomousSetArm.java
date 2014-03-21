@@ -28,7 +28,9 @@ public class AutonomousSetArm extends CommandBase {
     }
 
     protected void execute() {
-        if (t.get() > 0.5) ldisubsystem.retract_arm();
+        if (t.get() > 0.5) {
+            ldisubsystem.retract_arm();
+        }
     }
 
     protected boolean isFinished() {
@@ -37,10 +39,12 @@ public class AutonomousSetArm extends CommandBase {
 
     protected void end() {
         ldisubsystem.retract_arm();
+        ldisubsystem.setIntakeMotors(0);
     }
 
     protected void interrupted() {
         ldisubsystem.retract_arm();
+        ldisubsystem.setIntakeMotors(0);
     }
     
 }
