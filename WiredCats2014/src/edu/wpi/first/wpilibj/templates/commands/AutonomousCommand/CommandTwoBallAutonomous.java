@@ -10,8 +10,8 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.templates.commands.CommandBase;
 import edu.wpi.first.wpilibj.templates.commands.CommandCock;
 import edu.wpi.first.wpilibj.templates.commands.CommandExtendHood;
-import edu.wpi.first.wpilibj.templates.commands.CommandLastMinuteShit;
-import edu.wpi.first.wpilibj.templates.commands.CommandIntakeDelay;
+import edu.wpi.first.wpilibj.templates.commands.CommandIntakeAlpha;
+import edu.wpi.first.wpilibj.templates.commands.CommandIntakeBeta;
 import edu.wpi.first.wpilibj.templates.commands.CommandLaunch;
 import edu.wpi.first.wpilibj.templates.commands.CommandRetractHood;
 
@@ -24,24 +24,38 @@ public class CommandTwoBallAutonomous extends CommandGroup{
     
     public CommandTwoBallAutonomous(){
         
-        addSequential(new AutonomousIntake(1.25));
-        addSequential(new CommandIntakeDelay());
-        addSequential(new CommandExtendHood());
-        addSequential(new AutonomousWait(0.50f));
-        addSequential(new CommandRetractHood());
+        addParallel(new AutonomousIntake(0.4));   
+        addParallel(new AutonomousStraightDrive(0.50f, true));
+        addSequential(new AutonomousWait(0.01f));
+        addSequential(new CommandIntakeBeta()); 
         addSequential(new CommandLaunch());
-        addSequential(new CommandCock());
-        addSequential(new AutonomousStraightDrive(0.45f, false));
-        addSequential(new AutonomousIntake(1.25));
-        addSequential(new CommandIntakeDelay());
-        addSequential(new AutonomousStraightDrive(0.75f, true));
-        addSequential(new AutonomousWait(0.5f));
-        addSequential(new CommandExtendHood());
-        addSequential(new AutonomousWait(0.50f));
-        addSequential(new CommandRetractHood());
-        addSequential(new CommandLaunch());
-        addSequential(new CommandCock());
+        addParallel(new AutonomousStraightDrive(0.60f,false));
+        addParallel(new CommandCock());
+        addParallel(new AutonomousIntake(1.25));
+        addSequential(new AutonomousWait(0.01f));
+        addSequential(new CommandIntakeBeta());
         addSequential(new AutonomousStraightDrive(0.50f, true));
+        addSequential(new CommandLaunch());
+        addSequential(new CommandCock());
+        
+//        addSequential(new AutonomousIntake(1.25));
+//        addSequential(new CommandIntakeDelay());
+//        addSequential(new CommandExtendHood());
+//        addSequential(new AutonomousWait(0.50f));
+//        addSequential(new CommandRetractHood());
+//        addSequential(new CommandLaunch());
+//        addSequential(new CommandCock());
+//        addSequential(new AutonomousStraightDrive(0.45f, false));
+//        addSequential(new AutonomousIntake(1.25));
+//        addSequential(new CommandIntakeDelay());
+//        addSequential(new AutonomousStraightDrive(0.75f, true));
+//        addSequential(new AutonomousWait(0.5f));
+//        addSequential(new CommandExtendHood());
+//        addSequential(new AutonomousWait(0.50f));
+//        addSequential(new CommandRetractHood());
+//        addSequential(new CommandLaunch());
+//        addSequential(new CommandCock());
+//        addSequential(new AutonomousStraightDrive(0.50f, true));
 
     }
 }

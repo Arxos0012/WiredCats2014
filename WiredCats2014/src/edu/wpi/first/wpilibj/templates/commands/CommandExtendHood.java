@@ -18,6 +18,7 @@ public class CommandExtendHood extends CommandBase{
     
     protected void initialize() {
        ldisubsystem.extend_hood();
+       ldisubsystem.motors_intake();
     }
 
     protected void execute() {

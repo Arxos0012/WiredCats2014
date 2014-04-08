@@ -2,7 +2,7 @@ package Utilities;
 
 /**
  *
- * @author omarimatthews
+ * @author omarimatthews i am a cool kid 1337 haxor metaldaning ur mom
  */
 public class PID {
 
@@ -23,6 +23,10 @@ public class PID {
         this.kd = kd;
         errorSum = 0;
         errorPrev = 0;
+    }
+    
+    public void setP(float kp){
+        this.kp = kp;
     }
     
     /**

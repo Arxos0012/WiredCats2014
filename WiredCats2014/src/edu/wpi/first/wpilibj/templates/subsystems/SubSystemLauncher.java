@@ -6,6 +6,7 @@
 
 package edu.wpi.first.wpilibj.templates.subsystems;
 
+import Utilities.PneumaticSystem;
 import edu.wpi.first.wpilibj.AnalogChannel;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -87,6 +88,8 @@ public class SubSystemLauncher extends Subsystem {
         launcherWinchEngaged.set(false);
         launcherWinchLaunch.set(true);
         setFired(true);
+        CommandBase.pneumaticsystem.actuated(PneumaticSystem.WINCH_VOLUME_E, 
+                                             PneumaticSystem.WINCH_WP, true);
     }
     
     /**
@@ -95,5 +98,7 @@ public class SubSystemLauncher extends Subsystem {
     public void engageWench(){
         launcherWinchEngaged.set(true);
         launcherWinchLaunch.set(false);
+        CommandBase.pneumaticsystem.actuated(PneumaticSystem.WINCH_VOLUME_R, 
+                                             PneumaticSystem.WINCH_WP, false);
     }
 }

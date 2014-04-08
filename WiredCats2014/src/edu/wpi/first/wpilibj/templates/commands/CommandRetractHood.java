@@ -18,6 +18,7 @@ public class CommandRetractHood extends CommandBase{
     
     protected void initialize() {
         ldisubsystem.retract_hood();
+        ldisubsystem.setIntakeMotors(0);
     }
 
     protected void execute() {

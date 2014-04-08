@@ -1,6 +1,7 @@
 package edu.wpi.first.wpilibj.templates.commands;
 
 import Utilities.GamePad;
+import Utilities.PneumaticSystem;
 import Utilities.TXTReader;
 import com.sun.squawk.util.SimpleLinkedList;
 import edu.wpi.first.wpilibj.command.Command;
@@ -27,6 +28,7 @@ public abstract class CommandBase extends Command {
     public static SubSystemDrive drivesubsystem = new SubSystemDrive();
     public static SubSystemLauncher launchersubsystem = new SubSystemLauncher();
     public static SubSystemLDI ldisubsystem = new SubSystemLDI();
+    public static PneumaticSystem pneumaticsystem = new PneumaticSystem(114);
     
     public static GamePad jsdriver = new GamePad(RobotMap.JS_DRIVER);
     public static GamePad jssupport = new GamePad(RobotMap.JS_SUPPORT);
@@ -41,10 +43,8 @@ public abstract class CommandBase extends Command {
         
         //DRIVER
         jsdriver.leftBumper.whileHeld(new CommandOuttake());
-        jsdriver.rightBumper.whenPressed(new CommandLastMinuteShit());
-        jsdriver.rightBumper.whenReleased(new CommandIntakeDelay());
-
-        
+        jsdriver.rightBumper.whenPressed(new CommandIntakeAlpha());
+        jsdriver.rightBumper.whenReleased(new CommandIntakeBeta());
         //SUPPORT
 //        jssupport.y_button.whenPressed(new CommandCock());
         jssupport.a_button.whenPressed(new CommandExtendHood());

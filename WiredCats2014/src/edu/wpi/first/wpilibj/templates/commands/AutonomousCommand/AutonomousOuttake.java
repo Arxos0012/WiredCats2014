@@ -6,27 +6,32 @@
 
 package edu.wpi.first.wpilibj.templates.commands.AutonomousCommand;
 
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.templates.commands.CommandBase;
 import edu.wpi.first.wpilibj.templates.commands.CommandBase;
 
 /**
  *
  * @author WiredCats
  */
-public class AutonomousWait extends CommandBase{
-    
-    public AutonomousWait(float time){
-        setTimeout(time);
+public class AutonomousOuttake extends CommandBase{
+
+    public AutonomousOuttake(){
+        requires(ldisubsystem);
     }
     
-    public AutonomousWait(){
+    protected void initialize() {
+        ldisubsystem.motors_outtake();
     }
 
-    protected void initialize() {
+    public int autoParameters() {
+        return 1; //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    public void autoInit(float[] vals) {
+        this.setTimeout(vals[0]);
     }
 
     protected void execute() {
+
     }
 
     protected boolean isFinished() {
@@ -34,14 +39,11 @@ public class AutonomousWait extends CommandBase{
     }
 
     protected void end() {
+        ldisubsystem.setIntakeMotors(0);
     }
 
     protected void interrupted() {
+        ldisubsystem.setIntakeMotors(0);
     }
     
-    public int autoParameters(){ return 1; }
-    
-    public void autoInit(float[] vals){
-        this.setTimeout((double)vals[0]);
-    }
 }

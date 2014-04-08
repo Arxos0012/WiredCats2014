@@ -6,11 +6,14 @@
 
 package edu.wpi.first.wpilibj.templates.subsystems;
 
+import Utilities.PneumaticSystem;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.templates.RobotMap;
-import edu.wpi.first.wpilibj.templates.commands.CommandLastMinuteShit;
+import edu.wpi.first.wpilibj.templates.commands.CommandBase;
+import edu.wpi.first.wpilibj.templates.commands.CommandIntakeAlpha;
 
 /**
  *
@@ -26,32 +29,48 @@ public class SubSystemLDI extends Subsystem{
     Solenoid extend_hood = new Solenoid(RobotMap.EXTEND_HOOD);
     Solenoid retract_hood = new Solenoid(RobotMap.RETRACT_HOOD);
     
+    DigitalInput limitSwitch = new DigitalInput(RobotMap.BALL_LIMIT_SWITCH);
+    
     
     public SubSystemLDI(){
-        retract_arm();
     }
     
+    
     protected void initDefaultCommand() {
+        retract_arm();
+        extend_hood();
     }
     
     public void extend_arm(){
         extend_arm.set(true);
         retract_arm.set(false);
+        CommandBase.pneumaticsystem.actuated(PneumaticSystem.ARM_VOLUME_E, PneumaticSystem.ARM_WP, true);
     }
     
     public void retract_arm(){
         extend_arm.set(false);
         retract_arm.set(true);
+        CommandBase.pneumaticsystem.actuated(PneumaticSystem.ARM_VOLUME_R, PneumaticSystem.ARM_WP, false);
     }
     
     public void extend_hood(){
         extend_hood.set(true);
         retract_hood.set(false);
+        CommandBase.pneumaticsystem.actuated(PneumaticSystem.HOOD_VOLUME_E, PneumaticSystem.HOOD_WP, true);
     }
     
     public void retract_hood(){
         extend_hood.set(false);
         retract_hood.set(true);
+        CommandBase.pneumaticsystem.actuated(PneumaticSystem.HOOD_VOLUME_R, PneumaticSystem.HOOD_WP, false);
+    }
+    
+    /**
+     * Is this ballin'?
+     * @return 
+     */
+    public boolean isBallIn(){
+        return !limitSwitch.get();
     }
     
     public boolean isExtended(){
@@ -60,6 +79,10 @@ public class SubSystemLDI extends Subsystem{
     
     public void motors_intake(){
         setIntakeMotors(-1.0);
+    }
+    
+    public void motors_outtake(){
+        setIntakeMotors(1.0);
     }
     
     public void outtake(){

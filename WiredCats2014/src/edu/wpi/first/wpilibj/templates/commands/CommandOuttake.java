@@ -32,11 +32,9 @@ public class CommandOuttake extends CommandBase{
 
     protected void end() {
         ldisubsystem.setIntakeMotors(0);
-        ldisubsystem.retract_hood();
     }
 
     protected void interrupted() {
         ldisubsystem.setIntakeMotors(0);
-        ldisubsystem.retract_hood();
     }
 }

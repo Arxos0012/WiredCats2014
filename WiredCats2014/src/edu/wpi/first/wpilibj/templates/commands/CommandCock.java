@@ -21,6 +21,7 @@ public class CommandCock extends CommandBase{
         requires(launchersubsystem);
         requires(ldisubsystem);
         setInterruptible(false);
+        setTimeout(4);
     }
     
     protected void initialize() {
@@ -40,19 +41,20 @@ public class CommandCock extends CommandBase{
 
     protected boolean isFinished() {
         return !launchersubsystem.isFired() |
-                launchersubsystem.hitHESensor();
+                launchersubsystem.hitHESensor() |
+                isTimedOut();
     }
 
     protected void end() {
         launchersubsystem.stopCocking();
         launchersubsystem.setFired(false);
-        ldisubsystem.retract_hood();
+        ldisubsystem.retract_arm();
     }
 
     protected void interrupted() {
        launchersubsystem.stopCocking();
        launchersubsystem.setFired(false);
-       ldisubsystem.retract_hood();
+       ldisubsystem.retract_arm();
     }
     
 }

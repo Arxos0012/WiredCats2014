@@ -52,10 +52,9 @@ public class GoodScanner {
                 }
             }
             
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("IOException: the file is not found");
-            System.exit(-1);
         }
         return s;
     }

@@ -3,12 +3,15 @@ package edu.wpi.first.wpilibj.templates.subsystems;
 
 import Utilities.ChezyGyro;
 import Utilities.PID;
+import Utilities.PneumaticSystem;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.templates.RobotMap;
 import edu.wpi.first.wpilibj.templates.commands.CommandArcadeDrive;
+import edu.wpi.first.wpilibj.templates.commands.CommandBase;
 
 /**
  *
@@ -19,13 +22,15 @@ public class SubSystemDrive extends Subsystem {
     public static final int TICKS_PER_REVOLUTION = 120;
     public static final int WHEEL_RADIUS = 2;
     public static final float WHEEL_CIRCUMFERENCE_FEET = (float)((WHEEL_RADIUS*2*Math.PI)/12);
-    public static final float TICKS_TO_FEET_PER_SECOND = WHEEL_CIRCUMFERENCE_FEET / TICKS_PER_REVOLUTION;
+    public static final float LINEAR_FEET_PER_TICKS = WHEEL_CIRCUMFERENCE_FEET / TICKS_PER_REVOLUTION;
     
-    public static final float MAX_VELOCITY = 14; //m/s
+    public static float maxVelocity = 14; //m/s
+    public float motor_dead_band = 0.25f;
+    public float decceleration_dist = 1.5f;
     
     private Talon left = new Talon(RobotMap.DRIVE_LEFT_MOTOR);
     private Talon right = new Talon(RobotMap.DRIVE_RIGHT_MOTOR);
-//    private ChezyGyro gyro = new ChezyGyro(RobotMap.DRIVE_GYRO);
+    private Gyro gyro = new Gyro(RobotMap.DRIVE_GYRO);
     //Accelerometer accel = new Accelerometer(RobotMap.DRIVE_ACCEL);
     private Encoder leftEncoder = new Encoder(RobotMap.DRIVE_LEFT_ENCODER_A,
                                       RobotMap.DRIVE_LEFT_ENCODER_B);
@@ -34,19 +39,22 @@ public class SubSystemDrive extends Subsystem {
     private Solenoid lowSpeedSolenoid = new Solenoid(RobotMap.DRIVE_LOW_SPEED_SOLENOID);
     private Solenoid highSpeedSolenoid = new Solenoid(RobotMap.DRIVE_HIGH_SPEED_SOLENOID);
     
-    public PID lowStraightPID = new PID(0.5f,0,0);
-    public PID highStraightPID = new PID(0.5f,0,0);
-    public PID lowTurnPID = new PID(0.4f,0,0);
-    public PID highTurnPID = new PID(0.4f,0,0);
-
-    public PID straightPID = lowStraightPID;
-    public PID turnPID = lowTurnPID;
+    public PID straightPID = new PID(0.01f,0,0);
+    
+    public PID velPID = new PID(0.25f,0,0);
     
     public void init(){
 //        gyro.initGyro();
         leftEncoder.start();
         rightEncoder.start();
         setLowSpeed();
+        gyro.reset();
+        
+        straightPID.setP((float)CommandBase.resources.getValue("straightPropK"));
+        velPID.setP((float)CommandBase.resources.getValue("velPropK"));
+        maxVelocity = ((float)CommandBase.resources.getValue("maxVelocity"));
+        motor_dead_band = ((float) CommandBase.resources.getValue("motor_dead_band"));
+        decceleration_dist = ((float) CommandBase.resources.getValue("decceleration_dist"));
     }
     
     public void initDefaultCommand() {
@@ -67,15 +75,15 @@ public class SubSystemDrive extends Subsystem {
     public void setHighSpeed(){
         highSpeedSolenoid.set(true);
         lowSpeedSolenoid.set(false);
-        straightPID = highStraightPID;
-        turnPID = highTurnPID;
+        CommandBase.pneumaticsystem.actuated(PneumaticSystem.SHIFTING_VOLUME_R, 
+                                             PneumaticSystem.SHIFTING_WP, false);
     }   
     
     public void setLowSpeed(){
         lowSpeedSolenoid.set(true);
         highSpeedSolenoid.set(false);
-        straightPID = lowStraightPID;
-        turnPID = lowTurnPID;
+        CommandBase.pneumaticsystem.actuated(PneumaticSystem.SHIFTING_VOLUME_E, 
+                                             PneumaticSystem.SHIFTING_WP, true);
     }
     
     /**
@@ -83,14 +91,13 @@ public class SubSystemDrive extends Subsystem {
      * @return 
      */
     public float getSpeed(){
-        float ticks = (float)(leftEncoder.getRate() + -rightEncoder.getRate());
-        ticks /= 2;
-        return TICKS_TO_FEET_PER_SECOND * ticks;
+        float ticks_per_second = Math.max((float)Math.abs(leftEncoder.getRate()), (float)Math.abs(rightEncoder.getRate()));
+        return (LINEAR_FEET_PER_TICKS * ticks_per_second)/3.86f;
     }
     
     public float getDistance(){
-        float ticks = Math.max((float)Math.abs(leftEncoder.getRate()), (float)Math.abs(rightEncoder.getRate()));
-        return TICKS_TO_FEET_PER_SECOND * ticks;
+        float ticks = Math.max((float)Math.abs(leftEncoder.getRaw()), (float)Math.abs(rightEncoder.getRaw()));
+        return (LINEAR_FEET_PER_TICKS * ticks)/3.86f;
     }
     
     /**
@@ -102,9 +109,12 @@ public class SubSystemDrive extends Subsystem {
         return leftEncoder.get() - rightEncoder.get();
     }
     
-    public float getAngle(){
-//        return (float)gyro.getAngle();
-        return -1.0f;
+    public double getAngle(){
+        return gyro.getAngle();
+    }
+    
+    public double getRate(){
+        return gyro.getRate();
     }
 
     public boolean isHighSpeed(){
@@ -112,7 +122,7 @@ public class SubSystemDrive extends Subsystem {
     }
     
     public void resetGyro(){
-//        gyro.reset();
+        gyro.reset();
     }
     
     public void resetEncoders(){

@@ -4,21 +4,22 @@
  * and open the template in the editor.
  */
 
-package edu.wpi.first.wpilibj.templates.commands;
+package edu.wpi.first.wpilibj.templates.commands.AutonomousCommand;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.templates.commands.CommandBase;
 
 /**
  *
  * @author WiredCats
  */
-public class CommandLaunch extends CommandBase {
+public class AutonomousLaunch extends CommandBase {
 
-    private static final double POST_LAUNCH_DELAY = 1.5;
+    private static final double POST_LAUNCH_DELAY = 1.0;
     
     Timer t;
     
-    public CommandLaunch(){
+    public AutonomousLaunch(){
         requires(launchersubsystem);
         requires(ldisubsystem);
         setTimeout(POST_LAUNCH_DELAY);
@@ -27,20 +28,18 @@ public class CommandLaunch extends CommandBase {
     }
     
     protected void initialize() {
-      ldisubsystem.extend_hood();
+      ldisubsystem.retract_hood();
       ldisubsystem.extend_arm();
-      ldisubsystem.motors_intake();
+      ldisubsystem.setIntakeMotors(-0.5f);
       t.start();
     }
 
     protected void execute() { 
-        if (t.get() > 0.5){
-            ldisubsystem.retract_hood();
-        }
-        if (t.get() > 0.85){
+        if (t.get() > 0.35){
             ldisubsystem.extend_hood();
+            ldisubsystem.setIntakeMotors(0);
         }
-        if (t.get() > 1.00){
+        if (t.get() > 0.5){
             launchersubsystem.launch();
             t.stop();
             t.reset();
@@ -57,7 +56,6 @@ public class CommandLaunch extends CommandBase {
 
     protected void interrupted() {
         ldisubsystem.setIntakeMotors(0);
-
     }
     
 }

@@ -26,12 +26,11 @@ public class AutonomousStraightDrive extends CommandBase {
     private float currVelocity;
     private boolean forwards;
     
-    public AutonomousStraightDrive(float time, boolean forwards){
+    public AutonomousStraightDrive(float distance, boolean forwards){
         requires(drivesubsystem);
-        super.setTimeout(time);
         speeds = new WiredVector();
         drivesubsystem.resetEncoders();
-        destination = time;
+        destination = distance;
         this.forwards = forwards;
     }
     
@@ -39,14 +38,14 @@ public class AutonomousStraightDrive extends CommandBase {
         requires(drivesubsystem);
     }
     
-    public int parameter() { return 2; } 
+    public int autoParameters() { return 2; } 
     
     public void autoInit(float[] vals){
-        super.setTimeout(vals[0]);
+        destination = vals[0];
         speeds = new WiredVector();
         drivesubsystem.resetEncoders();
 //        destination = vals[0];
-        this.forwards = vals[1] == 0;
+        this.forwards = vals[1] == 1;
     }
     
     protected void initialize() {
@@ -55,29 +54,48 @@ public class AutonomousStraightDrive extends CommandBase {
         drivesubsystem.resetEncoders();
     }
     protected void execute() {
-//       
-//       
-        if(forwards) drivesubsystem.setLeftRight(-1, -1);
-        else drivesubsystem.setLeftRight(1,1);
-//       currVelocity = drivesubsystem.getSpeed();
-//        
-//       float power = drivesubsystem.straightPID.pid(getDesiredVelocity(), currVelocity);
-//       if (currPosition < destination && power < 0) power = 0;
-//       
-//       float angle = drivesubsystem.getAngle();
-//       
-//       float powDif = drivesubsystem.turnPID.pid(0, angle);
-//       
-//       drivesubsystem.setLeftRight(power+powDif, power-powDif);
+        
+        float dist = Math.abs(drivesubsystem.getDistance())+.25f;
+        
+        float desiredVel = getDesiredVelocity(dist);
+        float actualVel = drivesubsystem.getSpeed();
+        
+        //trapezoidal motion profiling.
+        float vel_power = drivesubsystem.velPID.pid(desiredVel, actualVel);
+            
+        float str_power = (float)drivesubsystem.straightPID.pid(0, (float)drivesubsystem.getAngle());
+        
+        if (vel_power < 0) vel_power = 0;
+        
+        float lpow;
+        float rpow;
+        if (forwards){
+            lpow = vel_power + str_power;
+            rpow = vel_power - str_power;
+        } else {
+            lpow = vel_power - str_power;
+            rpow = vel_power + str_power;
+        }
+        
+        System.out.println("dist: " + dist);
+        System.out.println("vel_power: " + vel_power);
+        System.out.println("str_power: " + str_power);
+        
+        if(forwards) drivesubsystem.setLeftRight(-lpow, -rpow);
+        else drivesubsystem.setLeftRight(lpow,rpow);
+        
     }
     
-    public float getDesiredVelocity(){
-        if ( currPosition < .2*destination){
-            return (float)(drivesubsystem.MAX_VELOCITY/(.2*destination))*currPosition;
-        } else if ( currPosition > .8*destination){
-            return -(float)((drivesubsystem.MAX_VELOCITY/(.2*destination))*(currPosition-(.8f*destination)));
+    
+    
+    public float getDesiredVelocity(float pos){
+        if ( pos < 1f){
+            return (float)((drivesubsystem.maxVelocity-drivesubsystem.motor_dead_band))*pos+drivesubsystem.motor_dead_band;
+        } else if ( pos > destination - drivesubsystem.decceleration_dist){
+            float m = -drivesubsystem.maxVelocity/drivesubsystem.decceleration_dist;
+            return m * (pos - (destination - drivesubsystem.decceleration_dist)) + drivesubsystem.maxVelocity;
         } else {
-            return drivesubsystem.MAX_VELOCITY;
+            return drivesubsystem.maxVelocity;
         }
     }
     
@@ -96,7 +114,7 @@ public class AutonomousStraightDrive extends CommandBase {
     }
     protected boolean isFinished() {
         float dist = drivesubsystem.getDistance();
-        return isTimedOut();
+        return Math.abs(dist) + 0.5f > destination; // within 0.5f of desired.
     }
     protected void end() {
         drivesubsystem.setLeftRight(0, 0);

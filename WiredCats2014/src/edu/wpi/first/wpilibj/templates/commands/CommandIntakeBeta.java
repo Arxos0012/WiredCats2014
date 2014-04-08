@@ -10,32 +10,31 @@ package edu.wpi.first.wpilibj.templates.commands;
  *
  * @author WiredCats
  */
-public class CommandLastMinuteShit extends CommandBase{
+public class CommandIntakeBeta extends CommandBase{
 
-    public CommandLastMinuteShit(){
+    public CommandIntakeBeta(){
+        this.setTimeout(1.25);
         requires(ldisubsystem);
     }
     
     protected void initialize() {
-        ldisubsystem.extend_arm();
-        ldisubsystem.motors_intake();
-        ldisubsystem.extend_hood();
+
     }
 
     protected void execute() {
+
     }
 
     protected boolean isFinished() {
-        return false;
+        return isTimedOut();
     }
 
     protected void end() {
-        ldisubsystem.retract_arm();
+        ldisubsystem.setIntakeMotors(0.0);
     }
 
     protected void interrupted() {
-        ldisubsystem.retract_arm();
+        ldisubsystem.setIntakeMotors(0.0);
     }
-    
     
 }

@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj.templates.commands.CommandBase;
  */
 public class AutonomousIntake extends CommandBase{
 
+    private double motor_speed = 0.75;
+    
     public AutonomousIntake(double timeout){
         requires(ldisubsystem);
         this.setTimeout(timeout);
@@ -26,13 +28,14 @@ public class AutonomousIntake extends CommandBase{
     
     public void autoInit(float[] vals){
         this.setTimeout(vals[0]);
+        motor_speed = vals[1];
     }
     
-    public int autoParameter() { return 1; }
+    public int autoParameters() { return 2; }
     
     protected void initialize() {
         ldisubsystem.extend_arm();
-        ldisubsystem.motors_intake();
+        ldisubsystem.setIntakeMotors(motor_speed);
         ldisubsystem.extend_hood();
     }
 
@@ -46,11 +49,13 @@ public class AutonomousIntake extends CommandBase{
     protected void end() {
         ldisubsystem.retract_arm();
         ldisubsystem.retract_hood();
+        ldisubsystem.setIntakeMotors(0);
     }
 
     protected void interrupted() {
         ldisubsystem.retract_arm();
         ldisubsystem.retract_hood();
+        ldisubsystem.setIntakeMotors(0);
     }
     
 }

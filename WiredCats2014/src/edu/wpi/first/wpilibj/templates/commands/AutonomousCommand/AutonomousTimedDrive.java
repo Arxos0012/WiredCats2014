@@ -6,43 +6,44 @@
 
 package edu.wpi.first.wpilibj.templates.commands.AutonomousCommand;
 
-import edu.wpi.first.wpilibj.templates.commands.CommandBase;
+import Utilities.WiredVector;
 import edu.wpi.first.wpilibj.templates.commands.CommandBase;
 
 /**
  *
  * @author WiredCats
  */
-public class AutonomousTurn extends CommandBase {
+public class AutonomousTimedDrive extends CommandBase{
 
+    public boolean forwards;
     
-    float currTheta;
-
-    float goal;
+    public AutonomousTimedDrive(){
+        requires(drivesubsystem);
+    }
     
-    /**
-     * Turns this many degrees from the current orientation.
-     * @param goal the desired orientation. 
-     */
-    public AutonomousTurn(float theta){
-        drivesubsystem.resetGyro();
-        setTimeout(1.0);
-        currTheta = 0;
-        goal = theta;
+    public void autoInit(float[] vals){
+        this.setTimeout(vals[0]);
+        drivesubsystem.resetEncoders();
+//        destination = vals[0];
+        this.forwards = vals[1] == 1;
+    }
+    
+    public int autoParameters(){
+        return 2;
     }
     
     protected void initialize() {
-
+        drivesubsystem.resetGyro();
+        drivesubsystem.resetEncoders();
     }
 
     protected void execute() {
-        currTheta = (float)drivesubsystem.getAngle();
-        double power = drivesubsystem.straightPID.pid(goal, currTheta);
-        drivesubsystem.setLeftRight(power, -power);
+        if(forwards) drivesubsystem.setLeftRight(-1, -1);
+        else drivesubsystem.setLeftRight(1,1);
     }
 
     protected boolean isFinished() {
-        return isTimedOut() | Math.abs(currTheta - goal) < 0.4;
+        return isTimedOut();
     }
 
     protected void end() {
@@ -51,7 +52,6 @@ public class AutonomousTurn extends CommandBase {
 
     protected void interrupted() {
         drivesubsystem.setLeftRight(0, 0);
-
     }
     
 }

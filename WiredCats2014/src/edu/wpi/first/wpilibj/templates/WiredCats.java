@@ -9,6 +9,7 @@ package edu.wpi.first.wpilibj.templates;
 
 
 import Utilities.GoodScanner;
+import Utilities.PneumaticSystem;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -23,7 +24,7 @@ import edu.wpi.first.wpilibj.templates.commands.AutonomousCommand.CommandTwoBall
 import edu.wpi.first.wpilibj.templates.commands.CommandBase;
 import edu.wpi.first.wpilibj.templates.commands.CommandCock;
 import edu.wpi.first.wpilibj.templates.commands.CommandGroupShoot;
-import edu.wpi.first.wpilibj.templates.commands.CommandLastMinuteShit;
+import edu.wpi.first.wpilibj.templates.commands.CommandIntakeAlpha;
 import edu.wpi.first.wpilibj.templates.commands.CommandLaunch;
 import edu.wpi.first.wpilibj.templates.commands.CommandOuttake;
 
@@ -40,6 +41,7 @@ public class WiredCats extends IterativeRobot {
     
     Relay compressor_relay;
     DigitalInput pressure_switch;
+    DigitalInput autonomous_switch;
     
 //    Talon t;
 //    DigitalInput pressureSwitch = new DigitalInput(RobotMap.COMPRESSOR_PRESSURE_SWITCH);
@@ -54,8 +56,9 @@ public class WiredCats extends IterativeRobot {
         CommandBase.init();
         compressor_relay = new Relay(RobotMap.COMPRESSOR_RELAY_CHANNEL);
         pressure_switch = new DigitalInput(RobotMap.COMPRESSOR_PRESSURE_SWITCH);
+        autonomous_switch = new DigitalInput(RobotMap.AUTONOMOUS_SWITCH);
         autonomousCommand = new CommandAutonomous();
-        
+        if (!pressure_switch.get()) CommandBase.pneumaticsystem = new PneumaticSystem(0);
     }
 
     /**
@@ -63,6 +66,16 @@ public class WiredCats extends IterativeRobot {
      */
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
+        
+        if (pressure_switch.get()) {
+            compressor_relay.set(Relay.Value.kOn);
+            compressor_relay.set(Relay.Value.kReverse);
+            compressor_relay.set(Relay.Value.kOff);
+        }
+        else {
+            compressor_relay.set(Relay.Value.kOff);
+            compressor_relay.set(Relay.Value.kReverse);
+        }
     }
 
     public void teleopInit() {
@@ -75,27 +88,27 @@ public class WiredCats extends IterativeRobot {
 
         autonomousCommand.cancel();
         CommandBase.resources.getFromFile("wiredCatsConfig.txt");
-        if (CommandBase.drivesubsystem.getCurrentCommand() != null){
-            ((CommandBase)CommandBase.drivesubsystem.getCurrentCommand()).updateValues();
-        }
-        if (CommandBase.ldisubsystem.getCurrentCommand() != null){
-            ((CommandBase)CommandBase.drivesubsystem.getCurrentCommand()).updateValues();
-        }
-        if (CommandBase.launchersubsystem.getCurrentCommand() != null){
-            ((CommandBase)CommandBase.drivesubsystem.getCurrentCommand()).updateValues();
-        }
         System.out.println("[WiredCats] Updating Values.");
+        CommandBase.drivesubsystem.init();
     }
     
     public void autonomousInit(){
-        
-       autonomousCommand = new CommandAutonomous("AutonomousOneBall.txt");
-        autonomousCommand.start();
+       if (!autonomous_switch.get()){
+           System.out.println("[WiredCats] Running OneBallAutonomous.");
+           autonomousCommand = new CommandAutonomous("OneBallAutonomous.txt");
+       } else {
+           System.out.println("[WiredCats] Running TwoBallAutonomous.");
+           autonomousCommand = new CommandAutonomous("TwoBallAutonomous.txt");
+       }
+       
+       autonomousCommand.start();
     }
     
     public void disabledInit(){
         compressor_relay.set(Relay.Value.kOff);
+        CommandBase.pneumaticsystem.stopTimer();
     }
+    
 
     /**
      * This function is called periodically during operator control
@@ -104,13 +117,24 @@ public class WiredCats extends IterativeRobot {
         Scheduler.getInstance().run();
 //        System.out.println("ps: " + pressure_switch.get());
         
-        System.out.println("hall effect: " + CommandBase.launchersubsystem.hitHESensor());
+        //updates the conceived pressure of the system.
+        CommandBase.pneumaticsystem.update(!pressure_switch.get());
+        
         if (pressure_switch.get()) {
+            if (compressor_relay.get() != Relay.Value.kOff){
+                //it has hit the boundary of the pressure switch.
+                CommandBase.pneumaticsystem.set(PneumaticSystem.PRESSURE_SWITCH_PSI_RISING);
+            }
             compressor_relay.set(Relay.Value.kOn);
             compressor_relay.set(Relay.Value.kReverse);
             compressor_relay.set(Relay.Value.kOff);
         }
         else {
+            if (compressor_relay.get() != Relay.Value.kReverse){
+                //it has hit the boundary of the pressure switch;
+                CommandBase.pneumaticsystem.set(PneumaticSystem.PRESSURE_SWITCH_PSI_FALLING);
+            }
+            
             compressor_relay.set(Relay.Value.kOff);
             compressor_relay.set(Relay.Value.kReverse);
         }
@@ -118,21 +142,6 @@ public class WiredCats extends IterativeRobot {
                 !(CommandBase.launchersubsystem.getCurrentCommand() instanceof CommandGroupShoot) ){
             Scheduler.getInstance().add(new CommandGroupShoot());
         }
-//        if ( CommandBase.jsdriver.leftTrigger() && 
-//                !(CommandBase.ldisubsystem.getCurrentCommand() instanceof CommandIntake)){
-//           Scheduler.getInstance().add(new CommandIntake());
-//        }
-//        if ( CommandBase.jsdriver.rightTrigger() && 
-//                !(CommandBase.ldisubsystem.getCurrentCommand() instanceof CommandLaunch) &&
-//                !(CommandBase.ldisubsystem.getCurrentCommand() instanceof CommandOuttake) &&
-//                (CommandBase.ldisubsystem.isExtended() )){
-//           Scheduler.getInstance().add(new CommandLaunch());
-//        }
-        
-        
-//       if (!pressureSwitch.get()){
-//           t.set(1);
-//       } else { t.set(0.0); } 
     }
     
     /**

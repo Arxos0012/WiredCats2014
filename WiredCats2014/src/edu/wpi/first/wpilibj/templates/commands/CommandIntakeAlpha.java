@@ -6,37 +6,39 @@
 
 package edu.wpi.first.wpilibj.templates.commands;
 
+import edu.wpi.first.wpilibj.command.Scheduler;
+
 /**
  *
  * @author WiredCats
  */
-public class CommandIntakeDelay extends CommandBase{
+public class CommandIntakeAlpha extends CommandBase{
 
-    public CommandIntakeDelay(){
-        this.setTimeout(0.5);
+    public CommandIntakeAlpha(){
         requires(ldisubsystem);
     }
     
     protected void initialize() {
-
+        ldisubsystem.extend_arm();
+        ldisubsystem.motors_intake();
+        ldisubsystem.extend_hood();
     }
 
     protected void execute() {
-
     }
 
     protected boolean isFinished() {
-        return isTimedOut();
+        return ldisubsystem.isBallIn();
     }
 
     protected void end() {
-        ldisubsystem.setIntakeMotors(0.0);
-        ldisubsystem.retract_hood();
+        ldisubsystem.retract_arm();
+        Scheduler.getInstance().add(new CommandIntakeBeta());
     }
 
     protected void interrupted() {
-        ldisubsystem.setIntakeMotors(0.0);
-        ldisubsystem.retract_hood();
+        ldisubsystem.retract_arm();
     }
+    
     
 }

@@ -70,18 +70,18 @@ public class CommandArcadeDrive extends CommandBase{
             left = y + primaryTurnCoefficient*x;
             right = y - primaryTurnCoefficient*x;
         }
-//        if (Math.abs(x) < 0.20){
-//            //shift
-//            float avgSpd = Math.abs(getAverageSpeed());
-//            if (avgSpd > upperShiftLimit && !drivesubsystem.isHighSpeed()){
-//                drivesubsystem.setHighSpeed();
-//            } else if (avgSpd < lowerShiftLimit && drivesubsystem.isHighSpeed()){
-//                drivesubsystem.setLowSpeed();
-//            }
-//        }
-        if (jsdriver.leftTrigger()){
-            drivesubsystem.setLowSpeed();
-        } else { drivesubsystem.setHighSpeed(); } 
+        if (Math.abs(x) < 0.20){
+            //shift
+            float avgSpd = Math.abs(getAverageSpeed());
+            if (avgSpd > upperShiftLimit && !drivesubsystem.isHighSpeed()){
+                drivesubsystem.setHighSpeed();
+            } else if (avgSpd < lowerShiftLimit && drivesubsystem.isHighSpeed()){
+                drivesubsystem.setLowSpeed();
+            }
+        }
+//        if (jsdriver.leftTrigger()){
+//            drivesubsystem.setLowSpeed();
+//        } else { drivesubsystem.setHighSpeed(); } 
         
         drivesubsystem.setLeftRight(left,right);
     }
@@ -94,7 +94,7 @@ public class CommandArcadeDrive extends CommandBase{
         for (int i = 0; i < speeds.size(); i++){
             sum+= speeds.getVal(i);
         }
-        if (speeds.size() > 10) speeds.removeFirst();
+        if (speeds.size() > 5) speeds.removeFirst();
         return sum / speeds.size();
     }
 
