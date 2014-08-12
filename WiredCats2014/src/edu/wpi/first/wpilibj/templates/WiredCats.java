@@ -10,11 +10,14 @@ package edu.wpi.first.wpilibj.templates;
 
 import Utilities.GoodScanner;
 import Utilities.PneumaticSystem;
+import Utilities.WiredVector;
+import edu.wpi.first.wpilibj.AnalogChannel;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -43,6 +46,15 @@ public class WiredCats extends IterativeRobot {
     DigitalInput pressure_switch;
     DigitalInput autonomous_switch;
     
+    AnalogChannel pressure_transducer;
+    
+    public static Timer autoTimer = new Timer();
+    
+    double pt_zero = 0;
+    double pt_scale = 1;
+    
+    WiredVector pressures = new WiredVector();
+    
 //    Talon t;
 //    DigitalInput pressureSwitch = new DigitalInput(RobotMap.COMPRESSOR_PRESSURE_SWITCH);
     /**
@@ -57,8 +69,10 @@ public class WiredCats extends IterativeRobot {
         compressor_relay = new Relay(RobotMap.COMPRESSOR_RELAY_CHANNEL);
         pressure_switch = new DigitalInput(RobotMap.COMPRESSOR_PRESSURE_SWITCH);
         autonomous_switch = new DigitalInput(RobotMap.AUTONOMOUS_SWITCH);
-        autonomousCommand = new CommandAutonomous();
         if (!pressure_switch.get()) CommandBase.pneumaticsystem = new PneumaticSystem(0);
+        pressure_transducer = new AnalogChannel(RobotMap.PRESSURE_TRANSDUCER);
+        autonomousCommand = new CommandAutonomous();
+        pressures.addVal(111);
     }
 
     /**
@@ -66,7 +80,8 @@ public class WiredCats extends IterativeRobot {
      */
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
-        
+        System.out.println("Gyro: " + CommandBase.drivesubsystem.getAngle());
+        System.out.println("Dist: " + CommandBase.drivesubsystem.getDistance());
         if (pressure_switch.get()) {
             compressor_relay.set(Relay.Value.kOn);
             compressor_relay.set(Relay.Value.kReverse);
@@ -85,11 +100,16 @@ public class WiredCats extends IterativeRobot {
         // this line or comment it out.
         compressor_relay.set(Relay.Value.kOn);
         compressor_relay.set(Relay.Value.kReverse);
-
+        
         autonomousCommand.cancel();
         CommandBase.resources.getFromFile("wiredCatsConfig.txt");
         System.out.println("[WiredCats] Updating Values.");
         CommandBase.drivesubsystem.init();
+        
+        pt_zero = CommandBase.resources.getValue("pt_zero");
+        pt_scale = CommandBase.resources.getValue("pt_scale");
+        
+        
     }
     
     public void autonomousInit(){
@@ -100,47 +120,60 @@ public class WiredCats extends IterativeRobot {
            System.out.println("[WiredCats] Running TwoBallAutonomous.");
            autonomousCommand = new CommandAutonomous("TwoBallAutonomous.txt");
        }
-       
        autonomousCommand.start();
     }
     
     public void disabledInit(){
+        CheesyVisionServer.getInstance().stopSamplingCounts();
         compressor_relay.set(Relay.Value.kOff);
         CommandBase.pneumaticsystem.stopTimer();
     }
     
-
+    public float getPressure(){
+        //TODO
+        float sum = 0;
+        float newVel = (float)pressure_transducer.getAverageVoltage();
+        pressures.addVal(newVel);
+        for (int i = 0; i < pressures.size(); i++){
+            sum+= pressures.getVal(i);
+        }
+        if (pressures.size() > 15) pressures.removeFirst();
+        return sum / pressures.size();
+    }
+    
     /**
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
-//        System.out.println("ps: " + pressure_switch.get());
-        
         //updates the conceived pressure of the system.
-        CommandBase.pneumaticsystem.update(!pressure_switch.get());
+        
+        double pressure = getPressure();
+        pressure = pt_scale*(pressure - pt_zero);    
+
+        System.out.println("Pressure: " + pressure);
+        System.out.println("Hall Effect: " + CommandBase.launchersubsystem.hitHESensor());
+        System.out.println("Dist: " + CommandBase.drivesubsystem.getDistance());
+        System.out.println("Gyro: " + CommandBase.drivesubsystem.getAngle());
+//        
+//        System.out.println("Left Hot Goal: " + CheesyVisionServer.getInstance().getLeftStatus() + ", " + 
+//                                CheesyVisionServer.getInstance().getLeftCount());
+//        
+//        System.out.println("Right Hot Goal: " + CheesyVisionServer.getInstance().getRightStatus() + ", " + 
+//                                CheesyVisionServer.getInstance().getRightCount());
+        
+//        CommandBase.drivesubsystem.printTicks();
+        
         
         if (pressure_switch.get()) {
-            if (compressor_relay.get() != Relay.Value.kOff){
-                //it has hit the boundary of the pressure switch.
-                CommandBase.pneumaticsystem.set(PneumaticSystem.PRESSURE_SWITCH_PSI_RISING);
-            }
             compressor_relay.set(Relay.Value.kOn);
             compressor_relay.set(Relay.Value.kReverse);
             compressor_relay.set(Relay.Value.kOff);
         }
         else {
-            if (compressor_relay.get() != Relay.Value.kReverse){
-                //it has hit the boundary of the pressure switch;
-                CommandBase.pneumaticsystem.set(PneumaticSystem.PRESSURE_SWITCH_PSI_FALLING);
-            }
             
             compressor_relay.set(Relay.Value.kOff);
             compressor_relay.set(Relay.Value.kReverse);
-        }
-        if (CommandBase.jsdriver.rightTrigger() &&
-                !(CommandBase.launchersubsystem.getCurrentCommand() instanceof CommandGroupShoot) ){
-            Scheduler.getInstance().add(new CommandGroupShoot());
         }
     }
     
