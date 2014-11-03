@@ -12,9 +12,9 @@ import edu.wpi.first.wpilibj.templates.commands.CommandBase;
  *
  * @author WiredCats
  */
-public class AutonomousLastMinuteShit extends CommandBase{
+public class AutonomousLastMinutePleaseWork extends CommandBase{
 
-    public AutonomousLastMinuteShit(){
+    public AutonomousLastMinutePleaseWork(){
         requires(ldisubsystem);
     }
     
